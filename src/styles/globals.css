@@ -12,12 +12,19 @@
     @apply h-full;
   }
 }
-.ql-editor p{
+@font-face {
+  font-family: Afterglow;
+  src: url("/fonts/Afterglow-regular.ttf");
+}
+.ql-editor {
+  max-width: 900px;
+}
+.ql-editor p, .ql-editor li {
   margin-bottom: 1em;
-  font-size: 160%;
+  font-size: 180%;
   line-height: 1.75;
   text-align: justify;
-  font-family: 'Merriweather', serif;
+  font-family: 'Lora', serif;
   box-sizing: border-box;
   cursor: text;
   overflow-wrap: break-word;

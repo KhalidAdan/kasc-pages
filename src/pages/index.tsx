@@ -21,7 +21,7 @@ const Home: NextPage = () => {
   return (
     <div className="mx-auto max-w-[900px] pb-52 pt-14">
       <div className="flex w-full flex-col items-center pb-16">
-        <p className="text-center text-sm font-thin uppercase tracking-[2px]">
+        <p className="text-center font-[Afterglow] text-sm font-thin uppercase tracking-[2px]">
           Chapter 1
         </p>
         <TextInput placeholder="Untitled" {...form.getInputProps("title")} />

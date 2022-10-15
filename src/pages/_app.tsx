@@ -1,5 +1,9 @@
 // src/pages/_app.tsx
-import { ColorScheme, ColorSchemeProvider, MantineProvider } from "@mantine/core";
+import {
+  ColorScheme,
+  ColorSchemeProvider,
+  MantineProvider,
+} from "@mantine/core";
 import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import type { AppType } from "next/app";
@@ -14,11 +18,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
-  const [colorScheme, setColorScheme] = useState<ColorScheme>('dark');
+  const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
   const toggleColorScheme = (value?: ColorScheme) => {
-    console.log(value)
-    setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
-  }
+    console.log(value);
+    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+  };
   return (
     <>
       <Head>
@@ -27,8 +31,14 @@ const MyApp: AppType<{ session: Session | null }> = ({
           url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
         </style>
       </Head>
-      <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-        <MantineProvider withGlobalStyles theme={{ colorScheme, fontFamily: "Lora" }}>
+      <ColorSchemeProvider
+        colorScheme={colorScheme}
+        toggleColorScheme={toggleColorScheme}
+      >
+        <MantineProvider
+          withGlobalStyles
+          theme={{ colorScheme, fontFamily: "Lora" }}
+        >
           <SessionProvider session={session}>
             <Component {...pageProps} />
           </SessionProvider>

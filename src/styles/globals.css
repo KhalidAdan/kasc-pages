@@ -14,10 +14,6 @@
   }
 }
 
-@font-face {
-  font-family: Afterglow;
-  src: url("/fonts/Afterglow-regular.ttf");
-}
 
 .ql-editor {
   max-width: 900px;
@@ -58,12 +54,7 @@ p[data-placeholder] {
   outline: none;
 }
 
-.mantine-TextInput-input {
-  border: none;
-  text-align: center;
+.quill>.ql-container>.ql-editor.ql-blank::before {
   font-size: 160%;
-  font-family: 'Merriweather', serif;
-  letter-spacing: 2px;
-  font-weight: 300;
-  color: inherit;
+  color: grey;
 }

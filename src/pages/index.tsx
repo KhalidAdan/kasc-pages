@@ -45,9 +45,7 @@ const Home: NextPage = () => {
     <>
       <div
         ref={ref}
-        className={`transition-blur fixed z-10 flex w-full justify-between px-4 delay-150 ${
-          hovered && "backdrop-blur-lg"
-        }`}
+        className={` fixed z-10 flex w-full justify-between px-4 `}
       >
         <div
           className={`flex items-end gap-12 pt-8 pb-8 transition-opacity delay-150 ${
@@ -65,9 +63,9 @@ const Home: NextPage = () => {
               Chisala
             </p>
           </div>
-          <p className="mb-2 text-xs uppercase tracking-wider">
+          {/* <p className="mb-2 text-xs uppercase tracking-wider">
             Hounds of baskerville
-          </p>
+          </p> */}
           <p>
             {wordCount} words, {pageCount} page{pageCount == 1 ? "" : "s"}
           </p>

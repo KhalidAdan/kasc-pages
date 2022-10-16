@@ -1,22 +1,22 @@
 import {
   ActionIcon,
   Avatar,
+  FileButton,
   Textarea,
   TextInput,
   useMantineColorScheme,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
 import { useHover } from "@mantine/hooks";
 import type { NextPage } from "next";
 import Image from "next/image";
-import React from "react";
 import { ReactQuill } from "../../components/RichText/RichText";
 import { toolbarOptions } from "../../components/RichText/ToolbarOptions";
+import useChisalaForm from "../../hooks/useChisalaForm";
+import useCustomDocumentSave from "../../hooks/useCustomDocumentSave";
 import useElementOnScreen from "../../hooks/useElementOnScreen";
-import useLocalStorage from "../../hooks/useLocalStorage";
-import { countWords } from "../utils/text";
+import useFormWordCount from "../../hooks/useFormWordCount";
 
-interface FormValues {
+export interface FormValues {
   title: string;
   subtitle: string;
   content: string;
@@ -24,44 +24,21 @@ interface FormValues {
 
 const Home: NextPage = () => {
   //const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
-
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
 
   const [isVisible, titleRef] = useElementOnScreen();
   const { hovered, ref } = useHover();
 
-  const [title, onTitleChange] = useLocalStorage<string>("title", "");
-  const [subtitle, onSubtitleChange] = useLocalStorage<string>("subtitle", "");
-  const [content, onContentChange] = useLocalStorage<string>("content", "");
-
-  const [wordCount, setWordCount] = React.useState<number>(0);
-  const [pageCount, setPageCount] = React.useState<number>(1);
-  const [pageSize] = React.useState<number>(500);
-
-  const form = useForm<FormValues>({
-    initialValues: {
-      title: title,
-      subtitle: subtitle,
-      content: content,
-    },
-  });
-
-  React.useEffect(() => {
-    const node = document.getElementsByClassName("ql-editor")[0];
-    if (node) {
-      const words = countWords(node);
-      const pages = Math.floor(words / pageSize);
-      setWordCount(words == 1 ? 0 : words);
-      setPageCount(pages);
-    } else {
-      const placeholderDiv = document.createElement("div");
-      placeholderDiv.insertAdjacentHTML("beforeend", content); // get value from DB
-      const words = countWords(placeholderDiv);
-      setWordCount(words == 1 ? 0 : words); // empty HTML comes out as 1 word, fixme
-      setPageCount(Math.floor(words / pageSize));
-    }
-  }, [form]);
+  const {
+    form,
+    setFormValues,
+    onTitleChange,
+    onSubtitleChange,
+    onContentChange,
+  } = useChisalaForm();
+  const [pageCount, wordCount] = useFormWordCount(form);
+  useCustomDocumentSave(form);
 
   return (
     <>
@@ -90,6 +67,22 @@ const Home: NextPage = () => {
           </p>
         </div>
         <div className="flex gap-16">
+          <FileButton
+            onChange={async (e) => {
+              const rawData = await e?.text();
+              if (rawData) {
+                const formData = JSON.parse(rawData);
+                setFormValues(formData);
+              }
+            }}
+            accept="application/chis"
+          >
+            {(props) => (
+              <ActionIcon {...props} color="gray">
+                <SaveIcon />
+              </ActionIcon>
+            )}
+          </FileButton>
           <ActionIcon
             className={`transition-opacity delay-150 ${
               isVisible || hovered ? "opacity-100" : "opacity-0"
@@ -116,6 +109,7 @@ const Home: NextPage = () => {
       <div className="mx-auto max-w-[900px] pb-52 pt-40">
         <div className="flex w-full flex-col items-center pb-6">
           <TextInput
+            placeholder="Add a chapter number, subtitle, etc."
             className="text-center text-sm"
             styles={{
               input: {
@@ -215,6 +209,23 @@ const MoonIcon = () => (
       strokeLinecap="round"
       strokeLinejoin="round"
       d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"
+    />
+  </svg>
+);
+
+const SaveIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className="h-6 w-6"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M7.5 7.5h-.75A2.25 2.25 0 004.5 9.75v7.5a2.25 2.25 0 002.25 2.25h7.5a2.25 2.25 0 002.25-2.25v-7.5a2.25 2.25 0 00-2.25-2.25h-.75m0-3l-3-3m0 0l-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 012.25 2.25v7.5a2.25 2.25 0 01-2.25 2.25h-7.5a2.25 2.25 0 01-2.25-2.25v-.75"
     />
   </svg>
 );

@@ -4,6 +4,7 @@ import {
   ColorSchemeProvider,
   MantineProvider,
 } from "@mantine/core";
+import { NotificationsProvider } from "@mantine/notifications";
 import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import type { AppType } from "next/app";
@@ -39,9 +40,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
           withGlobalStyles
           theme={{ colorScheme, fontFamily: "Lora" }}
         >
-          <SessionProvider session={session}>
-            <Component {...pageProps} />
-          </SessionProvider>
+          <NotificationsProvider autoClose={4000} zIndex={40}>
+            <SessionProvider session={session}>
+              <Component {...pageProps} />
+            </SessionProvider>
+          </NotificationsProvider>
         </MantineProvider>
       </ColorSchemeProvider>
     </div>

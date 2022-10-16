@@ -1,6 +1,6 @@
 import { UseFormReturnType } from "@mantine/form";
 import React from "react";
-import { FormValues } from "../src/pages";
+import { FormValues } from "./useChisalaForm";
 
 export default function useCustomDocumentSave(
   form: UseFormReturnType<FormValues>

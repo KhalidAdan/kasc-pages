@@ -2,11 +2,13 @@ import {
   ActionIcon,
   Avatar,
   FileButton,
+  Popover,
+  Text,
   Textarea,
   TextInput,
   useMantineColorScheme,
 } from "@mantine/core";
-import { useHover } from "@mantine/hooks";
+import { useDisclosure, useHover } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import type { NextPage } from "next";
 import Image from "next/image";
@@ -25,6 +27,8 @@ const Home: NextPage = () => {
 
   const [isVisible, titleRef] = useElementOnScreen();
   const { hovered, ref } = useHover();
+
+  const [opened, { close, open }] = useDisclosure(false);
 
   const {
     form,
@@ -94,17 +98,38 @@ const Home: NextPage = () => {
               accept="application/chis"
             >
               {(props) => (
-                <ActionIcon
-                  {...props}
-                  className={`transition-opacity delay-150 ${
-                    isVisible || hovered ? "opacity-100" : "opacity-0"
-                  }`}
-                  color="gray"
+                <Popover
+                  width={200}
+                  position="bottom"
+                  withArrow
+                  shadow="md"
+                  opened={opened}
                 >
-                  <LoadIcon />
-                </ActionIcon>
+                  <Popover.Target>
+                    <ActionIcon
+                      {...props}
+                      className={`transition-opacity delay-150 ${
+                        isVisible || hovered ? "opacity-100" : "opacity-0"
+                      }`}
+                      onMouseEnter={open}
+                      onMouseLeave={close}
+                      color="gray"
+                    >
+                      <LoadIcon />
+                    </ActionIcon>
+                  </Popover.Target>
+                  <Popover.Dropdown sx={{ pointerEvents: "none" }}>
+                    <Text
+                      size="sm"
+                      className="flex items-center justify-center font-[Lora]"
+                    >
+                      Load from file
+                    </Text>
+                  </Popover.Dropdown>
+                </Popover>
               )}
             </FileButton>
+
             <ActionIcon
               className={`transition-opacity delay-150 ${
                 isVisible || hovered ? "opacity-100" : "opacity-0"
@@ -117,6 +142,9 @@ const Home: NextPage = () => {
             </ActionIcon>
             <Avatar
               styles={{
+                root: {
+                  cursor: "pointer",
+                },
                 placeholder: {
                   fontFamily: "Lora",
                 },

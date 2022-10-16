@@ -25,8 +25,6 @@ interface FormValues {
 const Home: NextPage = () => {
   //const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
 
-  const [opened, setOpened] = React.useState(false);
-
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
 

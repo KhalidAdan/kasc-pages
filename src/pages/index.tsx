@@ -7,6 +7,7 @@ import {
   useMantineColorScheme,
 } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
 import type { NextPage } from "next";
 import Image from "next/image";
 import { ReactQuill } from "../../components/RichText/RichText";
@@ -44,10 +45,12 @@ const Home: NextPage = () => {
     <>
       <div
         ref={ref}
-        className="fixed z-10 flex w-full justify-between px-4 pt-8"
+        className={`transition-blur fixed z-10 flex w-full justify-between px-4 delay-150 ${
+          hovered && "backdrop-blur-lg"
+        }`}
       >
         <div
-          className={`flex items-end gap-16 pb-20 transition-opacity delay-150 ${
+          className={`flex items-end gap-12 pt-8 pb-8 transition-opacity delay-150 ${
             isVisible || hovered ? "opacity-100" : "opacity-0"
           }`}
         >
@@ -58,28 +61,51 @@ const Home: NextPage = () => {
               height={36}
               className="rotate-[20deg]"
             />
-            <p className="font-[Afterglow] text-2xl font-semibold tracking-wide">
+            <p className="font-[Afterglow] text-2xl font-semibold italic tracking-wide">
               Chisala
             </p>
           </div>
+          <p className="mb-2 text-xs uppercase tracking-wider">
+            Hounds of baskerville
+          </p>
           <p>
             {wordCount} words, {pageCount} page{pageCount == 1 ? "" : "s"}
           </p>
         </div>
-        <div className="flex gap-16">
+        <div className="flex gap-12 pt-8">
           <FileButton
             onChange={async (e) => {
+              if (!e?.name.includes(".chis"))
+                showNotification({
+                  title: "An error has occured",
+                  message: "You must load a file with the .chis extension",
+                  color: "red",
+                  icon: <ErrorIcon />,
+                  autoClose: false,
+                });
               const rawData = await e?.text();
               if (rawData) {
                 const formData = JSON.parse(rawData);
+                console.log(formData);
                 setFormValues(formData);
+
+                //TODO save to db with mutate here
+                onTitleChange(formData.title);
+                onSubtitleChange(formData.subtitle);
+                onContentChange(formData.content);
               }
             }}
             accept="application/chis"
           >
             {(props) => (
-              <ActionIcon {...props} color="gray">
-                <SaveIcon />
+              <ActionIcon
+                {...props}
+                className={`transition-opacity delay-150 ${
+                  isVisible || hovered ? "opacity-100" : "opacity-0"
+                }`}
+                color="gray"
+              >
+                <LoadIcon />
               </ActionIcon>
             )}
           </FileButton>
@@ -123,7 +149,7 @@ const Home: NextPage = () => {
                 color: "inherit",
                 width: "600px",
                 wordBreak: "break-word",
-                backgroundColor: colorScheme == "dark" && "#1A1B1E !important",
+                backgroundColor: dark && "#1A1B1E !important",
               },
             }}
             {...form.getInputProps("subtitle")}
@@ -146,8 +172,9 @@ const Home: NextPage = () => {
                 border: "none",
                 textAlign: "center",
                 fontSize: "160%",
-                letterSpacing: "2px",
                 fontWeight: 600,
+                fontFamily: "Lora",
+                letterSpacing: "2px",
                 textTransform: "uppercase",
                 color: "inherit",
                 width: "600px",
@@ -213,7 +240,7 @@ const MoonIcon = () => (
   </svg>
 );
 
-const SaveIcon = () => (
+const LoadIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
@@ -226,6 +253,23 @@ const SaveIcon = () => (
       strokeLinecap="round"
       strokeLinejoin="round"
       d="M7.5 7.5h-.75A2.25 2.25 0 004.5 9.75v7.5a2.25 2.25 0 002.25 2.25h7.5a2.25 2.25 0 002.25-2.25v-7.5a2.25 2.25 0 00-2.25-2.25h-.75m0-3l-3-3m0 0l-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 012.25 2.25v7.5a2.25 2.25 0 01-2.25 2.25h-7.5a2.25 2.25 0 01-2.25-2.25v-.75"
+    />
+  </svg>
+);
+
+const ErrorIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    className="h-6 w-6"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
     />
   </svg>
 );

@@ -1,7 +1,7 @@
 import { UseFormReturnType } from "@mantine/form";
 import React from "react";
-import { FormValues } from "../src/pages";
 import { countWords } from "../src/utils/text";
+import { FormValues } from "./useChisalaForm";
 
 export default function useFormWordCount(form: UseFormReturnType<FormValues>) {
   const [wordCount, setWordCount] = React.useState<number>(0);

@@ -8,6 +8,7 @@ import {
 import { useForm } from "@mantine/form";
 import { useHover } from "@mantine/hooks";
 import type { NextPage } from "next";
+import Image from "next/image";
 import React from "react";
 import { ReactQuill } from "../../components/RichText/RichText";
 import { toolbarOptions } from "../../components/RichText/ToolbarOptions";
@@ -75,9 +76,17 @@ const Home: NextPage = () => {
             isVisible || hovered ? "opacity-100" : "opacity-0"
           }`}
         >
-          <p className="font-[Afterglow] text-2xl font-semibold tracking-wide">
-            Chisala
-          </p>
+          <div className="flex items-center gap-1">
+            <Image
+              src="/image.svg"
+              width={36}
+              height={36}
+              className="rotate-[20deg]"
+            />
+            <p className="font-[Afterglow] text-2xl font-semibold tracking-wide">
+              Chisala
+            </p>
+          </div>
           <p>
             {wordCount} words, {pageCount} page{pageCount == 1 ? "" : "s"}
           </p>
@@ -208,48 +217,6 @@ const MoonIcon = () => (
       strokeLinecap="round"
       strokeLinejoin="round"
       d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"
-    />
-  </svg>
-);
-
-const BurgerIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className="h-6 w-6 hover:cursor-pointer"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M3.75 9h16.5m-16.5 6.75h16.5"
-    />
-  </svg>
-);
-
-const ExpandScreen = () => (
-  <svg
-    onClick={(e) => {
-      if (document.fullscreenEnabled)
-        if (!document.fullscreenElement) {
-          document.body.requestFullscreen();
-        } else if (document.exitFullscreen) {
-          document.exitFullscreen();
-        }
-    }}
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className="h-6 w-6 hover:cursor-pointer"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"
     />
   </svg>
 );

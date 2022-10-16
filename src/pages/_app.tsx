@@ -24,7 +24,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
   };
   return (
-    <>
+    <div className="touch-none scroll-smooth">
       <Head>
         <style>
           @import
@@ -44,7 +44,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
           </SessionProvider>
         </MantineProvider>
       </ColorSchemeProvider>
-    </>
+    </div>
   );
 };
 

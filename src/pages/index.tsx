@@ -2,62 +2,91 @@ import {
   ActionIcon,
   Avatar,
   Textarea,
+  TextInput,
   useMantineColorScheme,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { useHover } from "@mantine/hooks";
 import type { NextPage } from "next";
 import React from "react";
 import { ReactQuill } from "../../components/RichText/RichText";
 import { toolbarOptions } from "../../components/RichText/ToolbarOptions";
+import useElementOnScreen from "../../hooks/useElementOnScreen";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import { countWords } from "../utils/text";
+
+interface FormValues {
+  title: string;
+  subtitle: string;
+  content: string;
+}
 
 const Home: NextPage = () => {
   //const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
 
+  const [opened, setOpened] = React.useState(false);
+
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
 
+  const [isVisible, titleRef] = useElementOnScreen();
+  const { hovered, ref } = useHover();
+
+  const [title, onTitleChange] = useLocalStorage<string>("title", "");
+  const [subtitle, onSubtitleChange] = useLocalStorage<string>("subtitle", "");
   const [content, onContentChange] = useLocalStorage<string>("content", "");
 
   const [wordCount, setWordCount] = React.useState<number>(0);
   const [pageCount, setPageCount] = React.useState<number>(1);
   const [pageSize] = React.useState<number>(500);
 
+  const form = useForm<FormValues>({
+    initialValues: {
+      title: title,
+      subtitle: subtitle,
+      content: content,
+    },
+  });
+
   React.useEffect(() => {
     const node = document.getElementsByClassName("ql-editor")[0];
     if (node) {
       const words = countWords(node);
       const pages = Math.floor(words / pageSize);
-      setWordCount(words);
+      setWordCount(words == 1 ? 0 : words);
       setPageCount(pages);
     } else {
       const placeholderDiv = document.createElement("div");
-      placeholderDiv.insertAdjacentHTML("beforeend", content);
+      placeholderDiv.insertAdjacentHTML("beforeend", content); // get value from DB
       const words = countWords(placeholderDiv);
       setWordCount(words == 1 ? 0 : words); // empty HTML comes out as 1 word, fixme
       setPageCount(Math.floor(words / pageSize));
     }
-  }, [content]);
-
-  const form = useForm({
-    initialValues: {
-      title: "",
-      subTitle: "",
-    },
-  });
+  }, [form]);
 
   return (
     <>
-      <div className="flex w-full justify-between px-52 pt-16">
-        <div className="flex gap-20 pb-20">
-          <BurgerIcon />
+      <div
+        ref={ref}
+        className={`fixed z-10 flex w-full justify-between px-12 pt-8`}
+      >
+        <div
+          className={`flex items-end gap-16 pb-20 transition-opacity delay-150 ${
+            isVisible || hovered ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <p className="font-[Afterglow] text-2xl font-semibold tracking-wide">
+            Chisala
+          </p>
           <p>
             {wordCount} words, {pageCount} page{pageCount == 1 ? "" : "s"}
           </p>
         </div>
-        <div className="flex gap-20">
+        <div className="flex gap-16">
           <ActionIcon
+            className={`transition-opacity delay-150 ${
+              isVisible || hovered ? "opacity-100" : "opacity-0"
+            }`}
             color={dark ? "yellow" : "blue"}
             onClick={() => toggleColorScheme()}
             title="Toggle color scheme"
@@ -77,14 +106,40 @@ const Home: NextPage = () => {
           </Avatar>
         </div>
       </div>
-      <div className="mx-auto max-w-[900px] pb-52 pt-14">
+      <div className="mx-auto max-w-[900px] pb-52 pt-40">
         <div className="flex w-full flex-col items-center pb-6">
-          <p className="mb-4 text-center font-[Afterglow] text-sm font-thin uppercase tracking-[2px]">
-            Chapter 1
-          </p>
+          <TextInput
+            className="text-center text-sm"
+            styles={{
+              input: {
+                border: "none",
+                textAlign: "center",
+                fontSize: "0.875rem",
+                fontWeight: 100,
+                lineHeight: "1.25rem",
+                letterSpacing: "2px",
+                textTransform: "uppercase",
+                color: "inherit",
+                width: "600px",
+                wordBreak: "break-word",
+                backgroundColor: colorScheme == "dark" && "#1A1B1E !important",
+              },
+            }}
+            {...form.getInputProps("subtitle")}
+            onChange={(e) => {
+              form.getInputProps("subtitle").onChange(e);
+              onSubtitleChange(e.target.value);
+            }}
+          />
           <Textarea
-            placeholder="Title me!"
+            className="z-20"
+            ref={titleRef}
+            placeholder="Add a title"
             {...form.getInputProps("title")}
+            onChange={(e) => {
+              form.getInputProps("title").onChange(e);
+              onTitleChange(e.target.value);
+            }}
             styles={{
               input: {
                 border: "none",
@@ -105,8 +160,11 @@ const Home: NextPage = () => {
           <ReactQuill
             className="h-full p-10 text-[160%] leading-9"
             theme="bubble"
-            value={content}
-            onChange={onContentChange}
+            {...form.getInputProps("content")}
+            onChange={(str) => {
+              form.getInputProps("content").onChange(str);
+              onContentChange(str);
+            }}
             placeholder="Wax poetic..."
             modules={{
               toolbar: toolbarOptions,

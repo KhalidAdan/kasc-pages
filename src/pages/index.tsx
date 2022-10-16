@@ -67,7 +67,7 @@ const Home: NextPage = () => {
     <>
       <div
         ref={ref}
-        className={`fixed z-10 flex w-full justify-between px-12 pt-8`}
+        className="fixed z-10 flex w-full justify-between px-4 pt-8"
       >
         <div
           className={`flex items-end gap-16 pb-20 transition-opacity delay-150 ${

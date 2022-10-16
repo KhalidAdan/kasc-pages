@@ -10,21 +10,16 @@ import { useHover } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import type { NextPage } from "next";
 import Image from "next/image";
-import { ReactQuill } from "../../components/RichText/RichText";
-import { toolbarOptions } from "../../components/RichText/ToolbarOptions";
+import { StyledReactQuill } from "../../components/RichText/RichText";
 import useChisalaForm from "../../hooks/useChisalaForm";
 import useCustomDocumentSave from "../../hooks/useCustomDocumentSave";
 import useElementOnScreen from "../../hooks/useElementOnScreen";
 import useFormWordCount from "../../hooks/useFormWordCount";
-
-export interface FormValues {
-  title: string;
-  subtitle: string;
-  content: string;
-}
+import { toolbarOptions } from "../utils/ToolbarOptions";
 
 const Home: NextPage = () => {
   //const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
+
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
 
@@ -43,159 +38,166 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <div
-        ref={ref}
-        className={` fixed z-10 flex w-full justify-between px-4 `}
-      >
+      <div className="grid h-screen w-screen place-content-center font-[Lora] uppercase italic md:hidden">
+        Mobile site coming soon!
+      </div>
+      <div className="hidden md:block">
         <div
-          className={`flex items-end gap-12 pt-8 pb-8 transition-opacity delay-150 ${
-            isVisible || hovered ? "opacity-100" : "opacity-0"
-          }`}
+          ref={ref}
+          className={`fixed z-10  flex w-full justify-between px-4 font-[Lora]`}
         >
-          <div className="flex items-center gap-1">
-            <Image
-              src="/image.svg"
-              width={36}
-              height={36}
-              className="rotate-[20deg]"
-            />
-            <p className="font-[Afterglow] text-2xl font-semibold italic tracking-wide">
-              Chisala
-            </p>
-          </div>
-          {/* <p className="mb-2 text-xs uppercase tracking-wider">
-            Hounds of baskerville
-          </p> */}
-          <p>
-            {wordCount} words, {pageCount} page{pageCount == 1 ? "" : "s"}
-          </p>
-        </div>
-        <div className="flex gap-12 pt-8">
-          <FileButton
-            onChange={async (e) => {
-              if (!e?.name.includes(".chis"))
-                showNotification({
-                  title: "An error has occured",
-                  message: "You must load a file with the .chis extension",
-                  color: "red",
-                  icon: <ErrorIcon />,
-                  autoClose: false,
-                });
-              const rawData = await e?.text();
-              if (rawData) {
-                const formData = JSON.parse(rawData);
-                console.log(formData);
-                setFormValues(formData);
-
-                //TODO save to db with mutate here
-                onTitleChange(formData.title);
-                onSubtitleChange(formData.subtitle);
-                onContentChange(formData.content);
-              }
-            }}
-            accept="application/chis"
-          >
-            {(props) => (
-              <ActionIcon
-                {...props}
-                className={`transition-opacity delay-150 ${
-                  isVisible || hovered ? "opacity-100" : "opacity-0"
-                }`}
-                color="gray"
-              >
-                <LoadIcon />
-              </ActionIcon>
-            )}
-          </FileButton>
-          <ActionIcon
-            className={`transition-opacity delay-150 ${
+          <div
+            className={`pb-8transition-opacity flex items-end gap-12 pt-8 delay-150 ${
               isVisible || hovered ? "opacity-100" : "opacity-0"
             }`}
-            color={dark ? "yellow" : "blue"}
-            onClick={() => toggleColorScheme()}
-            title="Toggle color scheme"
           >
-            {dark ? <SunIcon /> : <MoonIcon />}
-          </ActionIcon>
-          <Avatar
-            color={dark ? "yellow" : "blue"}
-            radius="xl"
-            styles={{
-              root: {
-                fontFamily: "Beaufort-Bold",
-              },
-            }}
-          >
-            K
-          </Avatar>
+            <div className="flex items-center gap-1">
+              <Image
+                src="/image.svg"
+                width={36}
+                height={36}
+                className="rotate-[20deg]"
+              />
+              <p className="font-[Afterglow] text-2xl font-semibold tracking-wide">
+                Chisala
+              </p>
+            </div>
+            {/* <p className="mb-2 text-xs uppercase tracking-wider">
+            Hounds of baskerville
+          </p> */}
+            <p>
+              {wordCount} words, {pageCount} page{pageCount == 1 ? "" : "s"}
+            </p>
+          </div>
+          <div className="flex items-center gap-12 pt-8">
+            <FileButton
+              onChange={async (e) => {
+                if (!e?.name.includes(".chis"))
+                  showNotification({
+                    title: "An error has occured",
+                    message: "You must load a file with the .chis extension",
+                    color: "red",
+                    icon: <ErrorIcon />,
+                    autoClose: false,
+                  });
+                const rawData = await e?.text();
+                if (rawData) {
+                  const formData = JSON.parse(rawData);
+                  setFormValues(formData);
+
+                  //TODO save to db with mutate here
+                  onTitleChange(formData.title);
+                  onSubtitleChange(formData.subtitle);
+                  onContentChange(formData.content);
+                }
+              }}
+              accept="application/chis"
+            >
+              {(props) => (
+                <ActionIcon
+                  {...props}
+                  className={`transition-opacity delay-150 ${
+                    isVisible || hovered ? "opacity-100" : "opacity-0"
+                  }`}
+                  color="gray"
+                >
+                  <LoadIcon />
+                </ActionIcon>
+              )}
+            </FileButton>
+            <ActionIcon
+              className={`transition-opacity delay-150 ${
+                isVisible || hovered ? "opacity-100" : "opacity-0"
+              }`}
+              color={dark ? "yellow" : "blue"}
+              onClick={() => toggleColorScheme()}
+              title="Toggle color scheme"
+            >
+              {dark ? <SunIcon /> : <MoonIcon />}
+            </ActionIcon>
+            <Avatar
+              styles={{
+                placeholder: {
+                  fontFamily: "Lora",
+                },
+              }}
+              color={dark ? "yellow" : "blue"}
+              radius="xl"
+            >
+              K
+            </Avatar>
+          </div>
         </div>
-      </div>
-      <div className="mx-auto max-w-[900px] pb-52 pt-40">
-        <div className="flex w-full flex-col items-center pb-6">
-          <TextInput
-            placeholder="Add a chapter number, subtitle, etc."
-            className="text-center text-sm"
-            styles={{
-              input: {
-                border: "none",
-                textAlign: "center",
-                fontSize: "0.875rem",
-                fontWeight: 100,
-                lineHeight: "1.25rem",
-                letterSpacing: "2px",
-                textTransform: "uppercase",
-                color: "inherit",
-                width: "600px",
-                wordBreak: "break-word",
-                backgroundColor: dark && "#1A1B1E !important",
-              },
-            }}
-            {...form.getInputProps("subtitle")}
-            onChange={(e) => {
-              form.getInputProps("subtitle").onChange(e);
-              onSubtitleChange(e.target.value);
-            }}
-          />
-          <Textarea
-            className="z-20"
-            ref={titleRef}
-            placeholder="Add a title"
-            {...form.getInputProps("title")}
-            onChange={(e) => {
-              form.getInputProps("title").onChange(e);
-              onTitleChange(e.target.value);
-            }}
-            styles={{
-              input: {
-                border: "none",
-                textAlign: "center",
-                fontSize: "160%",
-                fontWeight: 600,
-                fontFamily: "Lora",
-                letterSpacing: "2px",
-                textTransform: "uppercase",
-                color: "inherit",
-                width: "600px",
-                wordBreak: "break-word",
-                backgroundColor: colorScheme == "dark" && "#1A1B1E !important",
-              },
-            }}
-          />
-        </div>
-        <div>
-          <ReactQuill
-            className="h-full p-10 text-[160%] leading-9"
-            theme="bubble"
-            {...form.getInputProps("content")}
-            onChange={(str) => {
-              form.getInputProps("content").onChange(str);
-              onContentChange(str);
-            }}
-            placeholder="Wax poetic..."
-            modules={{
-              toolbar: toolbarOptions,
-            }}
-          />
+        <div className="mx-auto max-w-[900px] pb-52 pt-40">
+          <div className="flex w-full flex-col items-center pb-6">
+            <TextInput
+              placeholder="Add a chapter number, subtitle, etc."
+              className="text-center text-sm"
+              styles={{
+                input: {
+                  border: "none",
+                  textAlign: "center",
+                  fontFamily: "Beaufort Bold",
+                  fontSize: "0.875rem",
+                  fontWeight: 100,
+                  lineHeight: "1.25rem",
+                  letterSpacing: "2px",
+                  textTransform: "uppercase",
+                  color: "inherit",
+                  width: "600px",
+                  wordBreak: "break-word",
+                  backgroundColor: dark && "#1A1B1E !important",
+                },
+              }}
+              {...form.getInputProps("subtitle")}
+              onChange={(e) => {
+                form.getInputProps("subtitle").onChange(e);
+                onSubtitleChange(e.target.value);
+              }}
+            />
+            <Textarea
+              className="z-20"
+              ref={titleRef}
+              placeholder="Add a title"
+              {...form.getInputProps("title")}
+              onChange={(e) => {
+                form.getInputProps("title").onChange(e);
+                onTitleChange(e.target.value);
+              }}
+              styles={{
+                input: {
+                  border: "none",
+                  textAlign: "center",
+                  fontSize: "180%",
+                  fontWeight: 600,
+                  fontFamily: "Lora",
+                  letterSpacing: "2px",
+                  textTransform: "uppercase",
+                  color: "inherit",
+                  width: "600px",
+                  wordBreak: "break-word",
+                  backgroundColor:
+                    colorScheme == "dark" && "#1A1B1E !important",
+                },
+              }}
+            />
+          </div>
+          <div>
+            <StyledReactQuill
+              className="py-10"
+              fontFamily={form.values.fontFace}
+              theme="bubble"
+              {...form.getInputProps("content")}
+              onChange={(str: any) => {
+                form.getInputProps("content").onChange(str);
+                onContentChange(str);
+              }}
+              placeholder="Wax poetic..."
+              modules={{
+                toolbar: toolbarOptions,
+              }}
+            />
+          </div>
         </div>
       </div>
     </>

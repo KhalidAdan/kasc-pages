@@ -1,30 +1,56 @@
 import dynamic from "next/dynamic";
+import styled from "styled-components";
 
-export const ReactQuill = dynamic(() => import("react-quill"), {
+const ReactQuill = dynamic(() => import("react-quill"), {
   // Disable during server side rendering
   ssr: false,
   // Render anything as fallback on server, e.g. loader or html content without editor
   loading: () => null,
 });
 
-/* TRY
-const ReactQuill = dynamic(
-  async () => {
-    const { default: RQ } = await import("react-quill");
+type ExtraProps = {
+  fontFamily?: string;
+};
 
-    return ({ forwardedRef, ...props }) => <RQ ref={forwardedRef} {...props} />;
-  },
-  {
-    ssr: false
+export const StyledReactQuill = styled(ReactQuill)<ExtraProps>`
+  .ql-editor:focus-visible {
+    outline: none;
   }
-);
 
+  .ql-editor p,
+  .ql-editor li,
+  .ql-editor blockquote {
+    margin-bottom: 1em;
+    font-size: 180%;
+    line-height: 1.75;
+    text-align: justify;
+    font-weight: 100;
+    font-family: ${(props) => props.fontFamily};
+  }
 
-export default function QuillWrapper() {
-  const quillRef = React.useRef(false)
+  .ql-editor h1 {
+    margin-bottom: 2em;
+    font-size: 190%;
+    line-height: 1.8;
+    font-family: ${(props) => props.fontFamily};
+    font-weight: 550;
+    letter-spacing: 1px;
+  }
 
-  return <>
-    <ReactQuill forwardedRef={quillRef} />
-  </>
-}
-*/
+  .ql-editor h2 {
+    margin-bottom: 1.75em;
+    line-height: 1.8;
+    font-size: 185%;
+    font-family: ${(props) => props.fontFamily};
+    font-weight: 500;
+  }
+
+  .quill > .ql-container > .ql-editor.ql-blank::before {
+    color: grey;
+    font-size: 160%;
+    font-family: "Lora";
+    font-style: normal;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+`;

@@ -14,7 +14,6 @@ export default function useCustomDocumentSave(
       ) {
         e.preventDefault();
 
-        //TODO: handle load from file
         const dataStr =
           "data:text/json;charset=utf-8," +
           encodeURIComponent(JSON.stringify(form.values));

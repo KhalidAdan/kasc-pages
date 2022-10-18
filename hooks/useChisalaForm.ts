@@ -10,9 +10,9 @@ export interface FormValues {
 
 export default function useChisalaForm() {
   // TODO: query from DB here
-  const [title, onTitleChange] = useLocalStorage<string>("title", "");
-  const [subtitle, onSubtitleChange] = useLocalStorage<string>("subtitle", "");
-  const [content, onContentChange] = useLocalStorage<string>("content", "");
+  const [title, t] = useLocalStorage<FormValues["title"]>("title", "");
+  const [subtitle, s] = useLocalStorage<FormValues["subtitle"]>("subtitle", "");
+  const [content, c] = useLocalStorage<FormValues["content"]>("content", "");
   const [font, onFontChange] = useLocalStorage<FormValues["fontFace"]>(
     "font",
     "Lora"
@@ -29,10 +29,11 @@ export default function useChisalaForm() {
 
   return {
     form,
+    font,
     setFormValues: form.setValues,
-    onTitleChange,
-    onSubtitleChange,
-    onContentChange,
+    onTitleChange: t,
+    onSubtitleChange: s,
+    onContentChange: c,
     onFontChange,
   };
 }

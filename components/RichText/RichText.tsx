@@ -18,21 +18,28 @@ export const StyledReactQuill = styled(ReactQuill)<ExtraProps>`
   }
 
   .ql-editor p,
-  .ql-editor li,
   .ql-editor blockquote {
     margin-bottom: 1em;
     font-size: 180%;
     line-height: 1.75;
     text-align: justify;
     font-weight: 100;
-    font-family: ${(props) => props.fontFamily};
+    font-family: ${(props) => props.fontFamily} !important;
+  }
+
+  .ql-editor li {
+    font-size: 180%;
+    line-height: 1.75;
+    text-align: justify;
+    font-weight: 100;
+    font-family: ${(props) => props.fontFamily} !important;
   }
 
   .ql-editor h1 {
     margin-bottom: 2em;
     font-size: 190%;
     line-height: 1.8;
-    font-family: ${(props) => props.fontFamily};
+    font-family: ${(props) => props.fontFamily} !important;
     font-weight: 550;
     letter-spacing: 1px;
   }
@@ -45,12 +52,10 @@ export const StyledReactQuill = styled(ReactQuill)<ExtraProps>`
     font-weight: 500;
   }
 
-  .quill > .ql-container > .ql-editor.ql-blank::before {
+  .ql-editor.ql-blank::before {
     color: grey;
     font-size: 160%;
     font-family: "Lora";
-    font-style: normal;
-    letter-spacing: 2px;
-    text-transform: uppercase;
+    font-style: italic;
   }
 `;

@@ -13,11 +13,12 @@ datasource db {
 }
 
 model Application {
-  id          Int      @id @default(autoincrement())
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String
-  books       Book[]
-  createdDate DateTime
+  id               Int      @id @default(autoincrement())
+  user             User     @relation(fields: [userId], references: [id])
+  userId           String
+  books            Book[]
+  createdDate      DateTime @default(now())
+  selectedFontFace String?
 }
 
 model Book {
@@ -27,23 +28,24 @@ model Book {
   documents     Document[]
   Application   Application? @relation(fields: [applicationId], references: [id])
   applicationId Int?
-  createdDate   DateTime
-  modifiedDate  DateTime
+  createdDate   DateTime     @default(now())
+  modifiedDate  DateTime?
+  // consider TYPE enum here with MANUSCRIPT, BOOK, COLLECTION
 }
 
 model Document {
   id                Int           @id @default(autoincrement())
   title             String?       @unique
-  subTitle          String?
+  subtitle          String?
   state             DocumentState @default(DRAFT)
-  htmlContent       String
+  htmlContent       String        @db.LongText
   Folder            Folder?       @relation(fields: [folderId], references: [id])
   folderId          Int?
   markedForDeletion DateTime?
   Book              Book?         @relation(fields: [bookId], references: [id])
   bookId            Int?
-  createdDate       DateTime
-  modifiedDate      DateTime
+  createdDate       DateTime      @default(now())
+  modifiedDate      DateTime?
 }
 
 enum DocumentState {
@@ -61,8 +63,8 @@ model Folder {
   markedForDeletion DateTime?
   Books             Book?      @relation(fields: [bookId], references: [id])
   bookId            Int?
-  createdDate       DateTime
-  modifiedDate      DateTime
+  createdDate       DateTime   @default(now())
+  modifiedDate      DateTime?
 }
 
 // Necessary for Next auth

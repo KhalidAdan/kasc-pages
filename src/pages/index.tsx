@@ -15,14 +15,8 @@ const Home: NextPage = () => {
 
   const [isVisible, titleRef] = useElementOnScreen();
 
-  const {
-    form,
-    font,
-    setFormValues,
-    onTitleChange,
-    onSubtitleChange,
-    onContentChange,
-  } = useChisalaForm();
+  const { form, font, onTitleChange, onSubtitleChange, onContentChange } =
+    useChisalaForm();
   useCustomDocumentSave(form);
 
   return (
@@ -31,11 +25,7 @@ const Home: NextPage = () => {
         Mobile site coming soon!
       </div>
       <div className="hidden md:block">
-        <TopNav
-          isVisible={isVisible}
-          form={form}
-          setFormValues={setFormValues}
-        />
+        <TopNav isVisible={isVisible} form={form} />
         <div className="mx-auto max-w-[840px] pb-52 pt-40">
           <div className="flex w-full flex-col items-center pb-6">
             <TextInput

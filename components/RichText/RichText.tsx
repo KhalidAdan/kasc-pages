@@ -58,4 +58,8 @@ export const StyledReactQuill = styled(ReactQuill)<ExtraProps>`
     font-family: "Lora";
     font-style: italic;
   }
+
+  .ql-tooltip {
+    border-radius: 8px;
+  }
 `;

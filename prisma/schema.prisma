@@ -12,30 +12,57 @@ datasource db {
   referentialIntegrity = "prisma"
 }
 
+model Application {
+  id          Int      @id @default(autoincrement())
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  books       Book[]
+  createdDate DateTime
+}
+
+model Book {
+  id            Int          @id @default(autoincrement())
+  title         String       @unique
+  folders       Folder[]
+  documents     Document[]
+  Application   Application? @relation(fields: [applicationId], references: [id])
+  applicationId Int?
+  createdDate   DateTime
+  modifiedDate  DateTime
+}
+
 model Document {
   id                Int           @id @default(autoincrement())
-  title             String?
+  title             String?       @unique
   subTitle          String?
-  state             DocumentState @default(CREATED)
+  state             DocumentState @default(DRAFT)
   htmlContent       String
   Folder            Folder?       @relation(fields: [folderId], references: [id])
   folderId          Int?
   markedForDeletion DateTime?
+  Book              Book?         @relation(fields: [bookId], references: [id])
+  bookId            Int?
+  createdDate       DateTime
+  modifiedDate      DateTime
 }
 
 enum DocumentState {
-  CREATED
+  DRAFT
   PUBLISHED
 }
 
 model Folder {
   id                Int        @id @default(autoincrement())
   documents         Document[]
-  title             String?
+  title             String     @unique
   folderId          Int?       @unique
   parent            Folder?    @relation("Parent", fields: [folderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   child             Folder?    @relation("Parent")
   markedForDeletion DateTime?
+  Books             Book?      @relation(fields: [bookId], references: [id])
+  bookId            Int?
+  createdDate       DateTime
+  modifiedDate      DateTime
 }
 
 // Necessary for Next auth
@@ -45,12 +72,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? // @db.Text
-  access_token      String? // @db.Text
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? // @db.Text
+  id_token          String? @db.Text
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -66,13 +93,14 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?       @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
+  Application   Application[]
 }
 
 model VerificationToken {

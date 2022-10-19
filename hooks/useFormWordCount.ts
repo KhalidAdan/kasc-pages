@@ -13,13 +13,14 @@ export default function useFormWordCount(form: UseFormReturnType<FormValues>) {
       const words = countWords(node);
       const pages = Math.floor(words / pageSize);
       setWordCount(words == 1 ? 0 : words);
-      setPageCount(pages);
+      setPageCount(pages == 0 ? 1 : pages);
     } else {
       const placeholderDiv = document.createElement("div");
       placeholderDiv.insertAdjacentHTML("beforeend", form.values.content); // get value from DB
       const words = countWords(placeholderDiv);
+      const pages = Math.floor(words / pageSize);
       setWordCount(words == 1 ? 0 : words); // empty HTML comes out as 1 word, fixme
-      setPageCount(Math.floor(words / pageSize));
+      setPageCount(pages == 0 ? 1 : pages);
     }
   }, [form]);
 

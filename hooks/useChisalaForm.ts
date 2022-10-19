@@ -30,7 +30,6 @@ export default function useChisalaForm() {
   return {
     form,
     font,
-    setFormValues: form.setValues,
     onTitleChange: t,
     onSubtitleChange: s,
     onContentChange: c,

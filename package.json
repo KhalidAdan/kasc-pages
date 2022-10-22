@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@emotion/react": "^11.10.4",
+    "@heroicons/react": "^2.0.12",
     "@mantine/carousel": "^5.5.5",
     "@mantine/core": "^5.5.5",
     "@mantine/dates": "^5.5.5",
@@ -40,6 +41,7 @@
     "zod": "^3.18.0"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.3",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@types/jest": "^29.2.0",

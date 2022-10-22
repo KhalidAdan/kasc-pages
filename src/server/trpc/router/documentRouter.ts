@@ -2,13 +2,13 @@ import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 const Document = z.object({
-  id: z.number().optional(),
+  id: z.string().optional(),
   title: z.string().optional(),
   subtitle: z.string().optional(),
   state: z.enum(["DRAFT", "PUBLISHED"]).default("DRAFT"),
   htmlContent: z.string(),
-  folderId: z.number().optional(),
-  bookId: z.number().optional(),
+  folderId: z.string().optional(),
+  bookId: z.string().optional(),
   markedForDeletion: z.date().optional(),
   createdDate: z.date().optional(),
   modifiedDate: z.date().optional(),
@@ -27,12 +27,16 @@ export const documentRouter = router({
       });
     }),
 
+  // Runs a raw query to insert a
   create: protectedProcedure
-    .input(Document.omit({ state: true, id: true }))
+    .input(Document.pick({ folderId: true }))
     .mutation(async ({ ctx, input }) => {
       return await ctx.prisma.document.create({
         data: {
-          ...input,
+          folderId: input.folderId,
+        },
+        select: {
+          id: true,
         },
       });
     }),
@@ -56,7 +60,7 @@ export const documentRouter = router({
     .mutation(async ({ ctx, input }) => {
       return await ctx.prisma.document.update({
         data: {
-          title: input.subtitle,
+          subtitle: input.subtitle,
           modifiedDate: new Date(),
         },
         where: {
@@ -70,7 +74,7 @@ export const documentRouter = router({
     .mutation(async ({ ctx, input }) => {
       return await ctx.prisma.document.update({
         data: {
-          title: input.htmlContent,
+          htmlContent: input.htmlContent,
           modifiedDate: new Date(),
         },
         where: {

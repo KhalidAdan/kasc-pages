@@ -12,38 +12,27 @@ datasource db {
   referentialIntegrity = "prisma"
 }
 
-model Application {
-  id               Int      @id @default(autoincrement())
-  user             User     @relation(fields: [userId], references: [id])
-  userId           String
-  books            Book[]
-  createdDate      DateTime @default(now())
-  selectedFontFace String?
-}
-
 model Book {
-  id            Int          @id @default(autoincrement())
-  title         String       @unique
-  folders       Folder[]
-  documents     Document[]
-  Application   Application? @relation(fields: [applicationId], references: [id])
-  applicationId Int?
-  createdDate   DateTime     @default(now())
-  modifiedDate  DateTime?
-  // consider TYPE enum here with MANUSCRIPT, BOOK, COLLECTION
+  id           String    @id @default(uuid())
+  title        String    @unique
+  image        String
+  folders      Folder[]
+  createdDate  DateTime  @default(now())
+  modifiedDate DateTime?
+  User         User?     @relation(fields: [userId], references: [id])
+  userId       String?
 }
 
 model Document {
-  id                Int           @id @default(autoincrement())
-  title             String?       @unique
+  id                String        @id @default(uuid())
+  title             String?
   subtitle          String?
   state             DocumentState @default(DRAFT)
-  htmlContent       String        @db.LongText
+  htmlContent       String        @default("<p><br></p>") @db.LongText
+  displayOrder      Int?
   Folder            Folder?       @relation(fields: [folderId], references: [id])
-  folderId          Int?
+  folderId          String?
   markedForDeletion DateTime?
-  Book              Book?         @relation(fields: [bookId], references: [id])
-  bookId            Int?
   createdDate       DateTime      @default(now())
   modifiedDate      DateTime?
 }
@@ -54,22 +43,23 @@ enum DocumentState {
 }
 
 model Folder {
-  id                Int        @id @default(autoincrement())
+  id                String     @id @default(uuid())
   documents         Document[]
   title             String     @unique
-  folderId          Int?       @unique
+  folderId          String?    @unique
   parent            Folder?    @relation("Parent", fields: [folderId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   child             Folder?    @relation("Parent")
   markedForDeletion DateTime?
+  canBeDeleted      Boolean?   @default(true)
   Books             Book?      @relation(fields: [bookId], references: [id])
-  bookId            Int?
+  bookId            String?
   createdDate       DateTime   @default(now())
   modifiedDate      DateTime?
 }
 
 // Necessary for Next auth
 model Account {
-  id                String  @id @default(cuid())
+  id                String  @id @default(uuid())
   userId            String
   type              String
   provider          String
@@ -87,7 +77,7 @@ model Account {
 }
 
 model Session {
-  id           String   @id @default(cuid())
+  id           String   @id @default(uuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
@@ -95,14 +85,20 @@ model Session {
 }
 
 model User {
-  id            String        @id @default(cuid())
+  id            String    @id @default(uuid())
   name          String?
-  email         String?       @unique
+  email         String?   @unique
   emailVerified DateTime?
   image         String?
+  role          Role      @default(USER)
   accounts      Account[]
   sessions      Session[]
-  Application   Application[]
+  books         Book[]
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 model VerificationToken {

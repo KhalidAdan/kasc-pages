@@ -21,7 +21,6 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
   const toggleColorScheme = (value?: ColorScheme) => {
-    console.log(value);
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
   };
   return (

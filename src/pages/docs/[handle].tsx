@@ -1,31 +1,42 @@
 import { StyledReactQuill } from "@/components/RichText/RichText";
 import { FormValues, TopNav } from "@/components/TopNav/TopNav";
 import useElementOnScreen from "@/hooks/useElementOnScreen";
+import useFormWordCount from "@/hooks/useFormWordCount";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { trpc } from "@/utils/trpc";
 import { Textarea, TextInput, useMantineColorScheme } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { useDebouncedValue } from "@mantine/hooks";
 import { Document } from "@prisma/client";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import React from "react";
 import { toolbarOptions } from "../../utils/ToolbarOptions";
 
 const Docs: NextPage = () => {
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const { handle } = router.query;
   if (typeof handle !== "string") {
     throw new Error("handle gotta be a string");
   }
-  const { data, error, isLoading } = trpc.document.getDocument.useQuery(
-    {
-      id: parseInt(handle),
-    },
-    { refetchInterval: false }
-  );
+  const { data, error, isLoading, refetch } =
+    trpc.document.getDocument.useQuery(
+      {
+        id: handle,
+      },
+      {
+        refetchOnMount: true,
+        refetchOnWindowFocus: false,
+      }
+    );
 
-  if (status === "unauthenticated") router.push(`/api/auth/signin`);
+  React.useEffect(() => {
+    if (!session) refetch();
+  }, [session]);
+
+  if (status === "unauthenticated") router.push(`/authenticate`);
 
   if (!data || error || isLoading) {
     return (
@@ -60,7 +71,36 @@ const Editor: React.FC<{ data: Required<Document> }> = ({ data }) => {
     },
   });
 
-  const mutateDocument = trpc.document.create.useMutation();
+  const [debouncedTitle] = useDebouncedValue(form.values.title, 700);
+  const [debouncedSubtitle] = useDebouncedValue(form.values.subtitle, 700);
+  const [debouncedHTML] = useDebouncedValue(form.values.htmlContent, 700);
+
+  React.useEffect(() => {
+    mutateDocumentSubtitle.mutate({
+      subtitle: debouncedSubtitle,
+      id: data.id,
+    });
+  }, [debouncedSubtitle]);
+
+  React.useEffect(() => {
+    mutateDocumentTitle.mutate({
+      title: debouncedTitle,
+      id: data.id,
+    });
+  }, [debouncedTitle]);
+
+  React.useEffect(() => {
+    mutateHTMLContent.mutate({
+      id: data.id,
+      htmlContent: debouncedHTML,
+    });
+  }, [debouncedHTML]);
+
+  const [pageCount, wordCount] = useFormWordCount(form);
+
+  const mutateDocumentTitle = trpc.document.updateTitle.useMutation();
+  const mutateDocumentSubtitle = trpc.document.updateSubtitle.useMutation();
+  const mutateHTMLContent = trpc.document.updateHtmlContent.useMutation();
 
   return (
     <>
@@ -68,13 +108,25 @@ const Editor: React.FC<{ data: Required<Document> }> = ({ data }) => {
         Mobile site coming soon!
       </div>
       <div className="hidden md:block">
-        <TopNav isVisible={isVisible} form={form} />
+        <TopNav
+          isVisible={isVisible}
+          pageCount={pageCount}
+          wordCount={wordCount}
+          fixed
+          authenticated
+        />
         <div className="mx-auto max-w-[840px] pb-52 pt-40">
           <div className="flex w-full flex-col items-center pb-6">
             <TextInput
               placeholder="Add a chapter, subtitle, etc."
               className="text-center text-sm"
               styles={{
+                wrapper: {
+                  ":focus": {
+                    border: "none !important",
+                    boxShadow: "none !important",
+                  },
+                },
                 input: {
                   border: "none",
                   textAlign: "center",
@@ -87,6 +139,10 @@ const Editor: React.FC<{ data: Required<Document> }> = ({ data }) => {
                   color: "inherit",
                   width: "600px",
                   wordBreak: "break-word",
+                  ":focus": {
+                    border: "none !important",
+                    boxShadow: "none !important",
+                  },
                   backgroundColor: dark && "#1A1B1E !important",
                 },
               }}
@@ -115,6 +171,10 @@ const Editor: React.FC<{ data: Required<Document> }> = ({ data }) => {
                   color: "inherit",
                   width: "600px",
                   wordBreak: "break-word",
+                  ":focus": {
+                    border: "none !important",
+                    boxShadow: "none !important",
+                  },
                   backgroundColor:
                     colorScheme == "dark" && "#1A1B1E !important",
                 },

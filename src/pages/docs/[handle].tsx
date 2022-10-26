@@ -42,7 +42,7 @@ const Docs: NextPage = () => {
     return (
       <div className="grid h-screen w-screen place-content-center font-[Lora] uppercase italic ">
         {!error
-          ? !data
+          ? !isLoading
             ? `No data for Document # ${handle}`
             : "Loading..."
           : error.message}
@@ -60,7 +60,7 @@ const Editor: React.FC<{ data: Required<Document> }> = ({ data }) => {
   const dark = colorScheme === "dark";
 
   const [isVisible, titleRef] = useElementOnScreen();
-  const [font] = useLocalStorage<FormValues["fontFace"]>("font", "Lora");
+  const [font] = useLocalStorage<FormValues["fontFace"]>("font", "Dank Mono");
 
   const form = useForm<FormValues>({
     initialValues: {

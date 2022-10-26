@@ -27,16 +27,46 @@ export const documentRouter = router({
       });
     }),
 
-  // Runs a raw query to insert a
-  create: protectedProcedure
+  createDocument: protectedProcedure
     .input(Document.pick({ folderId: true }))
     .mutation(async ({ ctx, input }) => {
+      const documents = await ctx.prisma.document.findMany({
+        select: {
+          id: true,
+          displayOrder: true,
+          Folder: {
+            include: {
+              Books: {
+                select: {
+                  userId: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const largestDisplayOrder = Math.max(
+        ...documents.map((d) => d.displayOrder)
+      );
+
       return await ctx.prisma.document.create({
         data: {
           folderId: input.folderId,
+          displayOrder: largestDisplayOrder + 1,
         },
         select: {
           id: true,
+        },
+      });
+    }),
+
+  deleteDocument: protectedProcedure
+    .input(Document.pick({ id: true }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.document.delete({
+        where: {
+          id: input.id,
         },
       });
     }),

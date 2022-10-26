@@ -4,7 +4,7 @@ import { signIn, useSession } from "next-auth/react";
 
 const Home: NextPage = () => {
   const { data, status } = useSession();
-  const bootstrapAccount = trpc.book.create.useMutation();
+  const bootstrapAccount = trpc.book.bootStrap.useMutation();
 
   if (status === "authenticated")
     return (

@@ -51,7 +51,12 @@ export const StyledReactQuill = styled(ReactQuill)<ExtraProps>`
     font-family: ${(props) => props.fontFamily};
     font-weight: 500;
   }
-
+  .ql-editor strong {
+    font-weight: 600;
+  }
+  p.ql-align-center {
+    text-align: center;
+  }
   .ql-editor.ql-blank::before {
     color: grey;
     font-size: 160%;

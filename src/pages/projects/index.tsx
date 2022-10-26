@@ -1,8 +1,10 @@
 import TopNav from "@/components/TopNav";
 import { trpc } from "@/utils/trpc";
 import { PlusIcon } from "@heroicons/react/24/outline";
+import { Button, Modal, TextInput, useMantineColorScheme } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import React from "react";
 
 export default function ProjectsHome() {
   const { data: session, status } = useSession();
@@ -22,8 +24,26 @@ export default function ProjectsHome() {
 }
 
 const ProjectsList = () => {
-  const { data: books, error, isLoading } = trpc.book.getByUserId.useQuery();
+  const { colorScheme } = useMantineColorScheme();
+  const dark = colorScheme === "dark";
+
+  const [modalOpened, setModalOpened] = React.useState<boolean>(false);
+  const [title, setTitle] = React.useState<string>("");
+
+  const {
+    data: books,
+    error,
+    isLoading,
+    refetch,
+  } = trpc.book.getByUserId.useQuery();
   const router = useRouter();
+
+  const createBook = trpc.book.create.useMutation({
+    onSuccess: () => {
+      refetch();
+      setModalOpened(false);
+    },
+  });
 
   if (isLoading)
     return (
@@ -36,7 +56,7 @@ const ProjectsList = () => {
 
   return (
     <div className="h-full font-[Lora]">
-      <TopNav />
+      <TopNav authenticated />
       <main className="mx-48">
         <h1 className="mb-16 mt-8 text-3xl">Projects</h1>
         <ul role="list" className="grid grid-cols-4 gap-4">
@@ -77,6 +97,7 @@ const ProjectsList = () => {
               <div className="mt-6">
                 <button
                   type="button"
+                  onClick={(e) => setModalOpened(true)}
                   className="inline-flex items-center rounded-md border border-transparent bg-[#589bc7] px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-[#589bc7] focus:ring-offset-2"
                 >
                   <PlusIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
@@ -86,6 +107,35 @@ const ProjectsList = () => {
             </div>
           </li>
         </ul>
+
+        <Modal
+          size="sm"
+          opened={modalOpened}
+          onClose={() => setModalOpened(false)}
+          overlayOpacity={0.55}
+          overlayBlur={3}
+          title="Start your next big project"
+        >
+          <TextInput
+            name="title"
+            onChange={(e) => setTitle(e.target.value)}
+            value={title}
+            placeholder="Enter the project title, you can edit it later"
+            className="mb-4"
+            styles={{
+              input: {
+                backgroundColor: dark ? "#1A1B1E !important" : undefined,
+                borderRadius: "6px !important",
+              },
+            }}
+          />
+          <Button
+            className="inline-flex items-center rounded-md border border-transparent bg-[#589bc7] px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-[#589bc7] focus:ring-offset-2"
+            onClick={() => createBook.mutate({ title })}
+          >
+            Start scribbling
+          </Button>
+        </Modal>
       </main>
     </div>
   );

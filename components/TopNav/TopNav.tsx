@@ -1,17 +1,19 @@
 import { ActionIcon, Avatar, useMantineColorScheme } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
+import { AvailableFonts } from "contexts/FontContext";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import React from "react";
 import { MoonIcon, SunIcon } from "../Icons";
 
 export interface FormValues {
   title: string;
   subtitle: string;
   htmlContent: string;
-  fontFace: "Lora" | "Arial" | "Dank Mono" | "Beaufort Bold" | "Helvetica";
+  fontFace: AvailableFonts;
 }
 
-type Props = {
+type TopNavProps = {
   isVisible?: boolean;
   wordCount?: number;
   pageCount?: number;
@@ -19,7 +21,7 @@ type Props = {
   authenticated?: boolean;
 };
 
-export const TopNav: React.FC<Props> = ({
+export const TopNav: React.FC<TopNavProps> = ({
   isVisible,
   pageCount,
   wordCount,
@@ -51,10 +53,13 @@ export const TopNav: React.FC<Props> = ({
             width={36}
             height={36}
             className="rotate-[20deg]"
+            alt=""
           />
-          <p className="font-[Afterglow] text-2xl font-semibold tracking-wide">
-            Chisala
-          </p>
+          <a href="/projects">
+            <p className="font-[Afterglow] text-2xl font-semibold tracking-wide">
+              Chisala
+            </p>
+          </a>
         </div>
         {showCounts ? (
           <p className="pb-1">
@@ -70,7 +75,9 @@ export const TopNav: React.FC<Props> = ({
             fixed && (isVisible || hovered ? "opacity-100" : "opacity-0")
           }`}
           color={dark ? "yellow" : "blue"}
-          onClick={() => toggleColorScheme()}
+          onClick={() => {
+            toggleColorScheme();
+          }}
           title="Toggle color scheme"
         >
           {dark ? <SunIcon /> : <MoonIcon />}

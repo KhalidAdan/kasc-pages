@@ -19,3 +19,7 @@ const getText = (el: any) => {
 export const countWords = (el: any) => {
   return getText(el).split(/\s+/g).length;
 };
+
+export const isEditorEmpty = (htmlContent: string) => {
+  return htmlContent == "<p><br></p>";
+};

@@ -20,7 +20,7 @@ export default function DocumentList() {
 
   if (isLoading)
     return (
-      <div className="grid h-screen w-screen place-items-center font-[Lora] text-lg">
+      <div className="grid h-screen w-screen place-items-center text-lg">
         Loading...
       </div>
     );

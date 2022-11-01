@@ -5,11 +5,12 @@ import {
   MantineProvider,
 } from "@mantine/core";
 import { NotificationsProvider } from "@mantine/notifications";
+import { AvailableFonts, FontContext } from "contexts/FontContext";
 import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import type { AppType } from "next/app";
 import Head from "next/head";
-import { useState } from "react";
+import React, { useState } from "react";
 import "react-quill/dist/quill.bubble.css";
 import "react-quill/dist/quill.snow.css";
 import "../styles/globals.css";
@@ -19,14 +20,22 @@ const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
+  const [font, setFont] = React.useState<AvailableFonts>("Lora");
+  const [fontSize, setFontSize] = React.useState<number>(60);
+  const [lineHeight, setLineHeight] = React.useState<string>("1.75");
+
   const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
   const toggleColorScheme = (value?: ColorScheme) => {
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
   };
   return (
-    <div className="touch-none scroll-smooth">
+    <div className="scroll-smooth">
       <Head>
         <style>
+          @import
+          url(&apos;https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap&apos;);
+          @import
+          url(&apos;https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap&apos;);
           @import
           url(&apos;https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap&apos;);
         </style>
@@ -48,9 +57,25 @@ const MyApp: AppType<{ session: Session | null }> = ({
         toggleColorScheme={toggleColorScheme}
       >
         <MantineProvider withGlobalStyles theme={{ colorScheme }}>
-          <NotificationsProvider autoClose={4000} zIndex={40}>
+          <NotificationsProvider
+            autoClose={4000}
+            zIndex={40}
+            containerWidth={250}
+            position="bottom-center"
+          >
             <SessionProvider session={session}>
-              <Component {...pageProps} />
+              <FontContext.Provider
+                value={{
+                  font,
+                  setFont,
+                  fontSize,
+                  setFontSize,
+                  lineHeight,
+                  setLineHeight,
+                }}
+              >
+                <Component {...pageProps} />
+              </FontContext.Provider>
             </SessionProvider>
           </NotificationsProvider>
         </MantineProvider>

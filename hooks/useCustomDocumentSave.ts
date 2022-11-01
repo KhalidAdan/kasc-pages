@@ -1,6 +1,6 @@
+import { FormValues } from "@/components/TopNav/TopNav";
 import { UseFormReturnType } from "@mantine/form";
 import React from "react";
-import { FormValues } from "./useChisalaForm";
 
 export default function useCustomDocumentSave(
   form: UseFormReturnType<FormValues>

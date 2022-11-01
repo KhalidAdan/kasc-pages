@@ -90,14 +90,10 @@ export default function DocumentListItem({
             icon={<PencilIcon className="h-6 w-6" aria-hidden="true" />}
             onClick={() => router.push(`/docs/${doc.id}`)}
           >
-            <p className="text-base">Edit</p>
+            <p className="text-base">Open</p>
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>
     </li>
   );
-
-  function isEmptyHTML(htmlContent: string) {
-    return htmlContent == "<p><br></p>";
-  }
 }

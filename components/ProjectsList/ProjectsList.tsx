@@ -1,10 +1,16 @@
 import { trpc } from "@/utils/trpc";
+import {
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { Button, Modal, TextInput, useMantineColorScheme } from "@mantine/core";
-import AppLayout from "layouts/AppLayout";
-import { useRouter } from "next/router";
 import React from "react";
 import TopNav from "../TopNav";
+import ProjectListItem from "./ProjectListItem";
 
 const ProjectsList = () => {
   const { colorScheme } = useMantineColorScheme();
@@ -33,14 +39,31 @@ const ProjectsList = () => {
     mutate();
   }, []);
 
-  const router = useRouter();
-
   const createBook = trpc.book.create.useMutation({
     onSuccess: () => {
       refetch();
       setModalOpened(false);
     },
   });
+
+  // dnd kit sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+
+    if (active.id !== over.id && books) {
+      const activeIndex = books.findIndex((book) => book.id === active.id);
+      const overIndex = books.findIndex((book) => book.id === over.id);
+
+      return arrayMove(books, activeIndex, overIndex);
+    }
+  };
 
   if (isLoading || isMutationLoading)
     return (
@@ -52,19 +75,13 @@ const ProjectsList = () => {
   if (error) return <div>An error occured</div>;
 
   return (
-    <AppLayout>
+    <>
       <TopNav authenticated />
-      <main className="mx-48">
+      <main className="mx-auto max-w-4xl">
         <h1 className="mb-16 mt-8 text-3xl">Projects</h1>
-        <ul role="list" className="grid grid-cols-5 gap-4">
+        <ul role="list" className="grid grid-cols-4 gap-4">
           {books.map((book, index) => (
-            <li
-              key={index}
-              className="flex min-h-[220px] cursor-pointer flex-col justify-between overflow-hidden rounded-md border-2 border-solid border-gray-400 px-6 py-4 shadow-md"
-              onClick={(e) => router.push(`/projects/${book.id}`)}
-            >
-              <p className="text-xl">{book.title}</p>
-            </li>
+            <ProjectListItem book={book} index={index} />
           ))}
           <li className="overflow-hidden rounded-md border-2 border-dashed border-gray-400 px-6 py-4 shadow-md">
             <div className="flex flex-col">
@@ -101,7 +118,7 @@ const ProjectsList = () => {
                 <button
                   type="button"
                   onClick={(e) => setModalOpened(true)}
-                  className="inline-flex items-center rounded-md border border-transparent bg-[#589bc7] px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-[#589bc7] focus:ring-offset-2"
+                  className="inline-flex items-center rounded-md border border-transparent bg-carolina-blue-500 px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-carolina-blue-500 focus:ring-offset-2"
                 >
                   <PlusIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
                   New Project
@@ -133,14 +150,14 @@ const ProjectsList = () => {
             }}
           />
           <Button
-            className="inline-flex items-center rounded-md border border-transparent bg-[#589bc7] px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-[#589bc7] focus:ring-offset-2"
+            className="inline-flex items-center rounded-md border border-transparent bg-carolina-blue-500 px-4 py-2 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-carolina-blue-500 focus:ring-offset-2"
             onClick={() => createBook.mutate({ title })}
           >
             Start scribbling
           </Button>
         </Modal>
       </main>
-    </AppLayout>
+    </>
   );
 };
 

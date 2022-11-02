@@ -74,7 +74,7 @@ export const TopNav: React.FC<TopNavProps> = ({
           className={`transition-opacity delay-150 ${
             fixed && (isVisible || hovered ? "opacity-100" : "opacity-0")
           }`}
-          color={dark ? "yellow" : "blue"}
+          color={dark ? "yellow" : "text-carolina-blue-500"}
           onClick={() => {
             toggleColorScheme();
           }}
@@ -93,7 +93,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                 fontFamily: "Lora",
               },
             }}
-            color={dark ? "yellow" : "blue"}
+            color={dark ? "yellow" : "text-carolina-blue-500"}
             radius="xl"
           />
         )}

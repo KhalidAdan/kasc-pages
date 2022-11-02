@@ -4,7 +4,6 @@ import { toolbarOptions } from "@/utils/ToolbarOptions";
 import { trpc } from "@/utils/trpc";
 import { Textarea, TextInput, useMantineColorScheme } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { useDebouncedValue } from "@mantine/hooks";
 import { Document } from "@prisma/client";
 import FontContext from "contexts/FontContext";
 import React from "react";
@@ -13,7 +12,7 @@ import { StyledReactQuill } from "../RichText/RichText";
 import TopNav from "../TopNav";
 import { FormValues } from "../TopNav/TopNav";
 
-const Editor: React.FC<{ data: Required<Document> }> = ({ data }) => {
+const Editor: React.FC<{ data: Document }> = ({ data }) => {
   const {
     font: selectedFont,
     fontSize,
@@ -32,31 +31,6 @@ const Editor: React.FC<{ data: Required<Document> }> = ({ data }) => {
       fontFace: selectedFont,
     },
   });
-
-  const [debouncedTitle] = useDebouncedValue(form.values.title, 700);
-  const [debouncedSubtitle] = useDebouncedValue(form.values.subtitle, 700);
-  const [debouncedHTML] = useDebouncedValue(form.values.htmlContent, 700);
-
-  React.useEffect(() => {
-    mutateDocumentSubtitle.mutate({
-      subtitle: debouncedSubtitle,
-      id: data.id,
-    });
-  }, [debouncedSubtitle]);
-
-  React.useEffect(() => {
-    mutateDocumentTitle.mutate({
-      title: debouncedTitle,
-      id: data.id,
-    });
-  }, [debouncedTitle]);
-
-  React.useEffect(() => {
-    mutateHTMLContent.mutate({
-      id: data.id,
-      htmlContent: debouncedHTML,
-    });
-  }, [debouncedHTML]);
 
   const [pageCount, wordCount] = useFormWordCount(form);
 
@@ -105,12 +79,16 @@ const Editor: React.FC<{ data: Required<Document> }> = ({ data }) => {
                     border: "none !important",
                     boxShadow: "none !important",
                   },
-                  backgroundColor: dark && "#1A1B1E !important",
+                  backgroundColor: dark && "#141414 !important",
                 },
               }}
               {...form.getInputProps("subtitle")}
               onChange={(e) => {
                 form.getInputProps("subtitle").onChange(e);
+                mutateDocumentSubtitle.mutate({
+                  id: data.id,
+                  subtitle: e.target.value,
+                });
               }}
             />
             <Textarea
@@ -120,6 +98,10 @@ const Editor: React.FC<{ data: Required<Document> }> = ({ data }) => {
               {...form.getInputProps("title")}
               onChange={(e) => {
                 form.getInputProps("title").onChange(e);
+                mutateDocumentTitle.mutate({
+                  id: data.id,
+                  title: e.target.value,
+                });
               }}
               styles={{
                 input: {
@@ -138,7 +120,7 @@ const Editor: React.FC<{ data: Required<Document> }> = ({ data }) => {
                     boxShadow: "none !important",
                   },
                   backgroundColor:
-                    colorScheme == "dark" && "#1A1B1E !important",
+                    colorScheme == "dark" && "#141414 !important",
                 },
               }}
             />
@@ -153,6 +135,10 @@ const Editor: React.FC<{ data: Required<Document> }> = ({ data }) => {
               {...form.getInputProps("htmlContent")}
               onChange={(str) => {
                 form.getInputProps("htmlContent").onChange(str);
+                mutateHTMLContent.mutate({
+                  id: data.id,
+                  htmlContent: str,
+                });
               }}
               placeholder="Wax poetic..."
               modules={{

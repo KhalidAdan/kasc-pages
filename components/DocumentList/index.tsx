@@ -1,11 +1,27 @@
 import useGetBookById from "@/hooks/useGetBookById";
 import { trpc } from "@/utils/trpc";
+import {
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { DocumentPlusIcon } from "@heroicons/react/24/outline";
+import { Document } from "@prisma/client";
 import { useRouter } from "next/router";
-import DocumentListItem from "../DocumentListItem/DocumentList";
+import React from "react";
+import DocumentListItem from "../DocumentListItem/DocumentListItem";
 
 export default function DocumentList() {
+  const [documents, setDocuments] = React.useState<Document[]>([]);
   const [parent] = useAutoAnimate<HTMLUListElement>();
 
   const router = useRouter();
@@ -18,7 +34,35 @@ export default function DocumentList() {
   });
   const folder = book?.folders.find((folder) => folder.title === "Manuscript");
 
-  if (isLoading)
+  React.useEffect(() => {
+    if (folder) {
+      setDocuments(folder.documents);
+    }
+  }, [folder]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      setDocuments((items) => {
+        const oldIndex = items.findIndex((item) => item.id === active.id);
+        const newIndex = items.findIndex((item) => item.id === over.id);
+
+        const newArrayOrder = arrayMove(items, oldIndex, newIndex);
+
+        return newArrayOrder;
+      });
+    }
+  };
+
+  if (isLoading || documents.length == 0)
     return (
       <div className="grid h-screen w-screen place-items-center text-lg">
         Loading...
@@ -26,12 +70,19 @@ export default function DocumentList() {
     );
 
   return (
-    <>
+    <div className="h-full">
       <h1 className="mb-16 mt-8 text-4xl">{book?.title}</h1>
       <ul role="list" className="flex flex-col gap-5" ref={parent}>
-        {folder?.documents.map((doc) => {
-          return <DocumentListItem refetch={refetch} doc={doc} />;
-        })}
+        <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+          <SortableContext
+            items={documents}
+            strategy={verticalListSortingStrategy}
+          >
+            {documents.map((doc) => {
+              return <DocumentListItem refetch={refetch} doc={doc} />;
+            })}
+          </SortableContext>
+        </DndContext>
 
         <li
           onClick={(_e) => createDocument.mutate({ folderId: folder!.id })}
@@ -41,6 +92,6 @@ export default function DocumentList() {
           <p>Add new chapter</p>
         </li>
       </ul>
-    </>
+    </div>
   );
 }

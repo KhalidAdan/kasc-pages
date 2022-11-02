@@ -27,4 +27,13 @@ export const applicationRouter = router({
     await ctx.prisma.$executeRaw`DROP TABLE IF EXISTS User`;
     await ctx.prisma.$executeRaw`DROP TABLE IF EXISTS VerificationToken;`;
   }),
+  deleteData: protectedProcedure.mutation(async ({ ctx }) => {
+    await ctx.prisma.$executeRaw`DELETE FROM Book;`;
+    await ctx.prisma.$executeRaw`DELETE FROM Document`;
+    await ctx.prisma.$executeRaw`DELETE FROM Folder`;
+    await ctx.prisma.$executeRaw`DELETE FROM Account`;
+    await ctx.prisma.$executeRaw`DELETE FROM Session`;
+    await ctx.prisma.$executeRaw`DELETE FROM User`;
+    await ctx.prisma.$executeRaw`DELETE FROM VerificationToken;`;
+  }),
 });

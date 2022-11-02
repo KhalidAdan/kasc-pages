@@ -26,10 +26,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
 
   const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
   const toggleColorScheme = (value?: ColorScheme) => {
-    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+    const changeColorSchemeTo = colorScheme === "dark" ? "light" : "dark";
+    setColorScheme(value || changeColorSchemeTo);
   };
   return (
-    <div className="scroll-smooth">
+    <div className="h-full scroll-smooth">
       <Head>
         <style>
           @import

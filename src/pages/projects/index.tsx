@@ -1,4 +1,5 @@
 import ProjectsList from "@/components/ProjectsList/ProjectsList";
+import AppLayout from "layouts/AppLayout";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
@@ -16,5 +17,9 @@ export default function ProjectsHome() {
 
   if (!session?.user) router.push(`/authenticate`);
 
-  return <ProjectsList />;
+  return (
+    <AppLayout>
+      <ProjectsList />
+    </AppLayout>
+  );
 }

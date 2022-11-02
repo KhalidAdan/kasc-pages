@@ -21,7 +21,7 @@ const Docs: NextPage = () => {
         id: handle,
       },
       {
-        refetchOnMount: true,
+        refetchOnMount: false,
         refetchOnWindowFocus: false,
       }
     );

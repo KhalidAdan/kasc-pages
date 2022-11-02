@@ -86,7 +86,7 @@ export const documentRouter = router({
     }),
 
   updateSubtitle: protectedProcedure
-    .input(Document.pick({ subtitle: true, id: true, modifiedDate: true }))
+    .input(Document.pick({ subtitle: true, id: true }))
     .mutation(async ({ ctx, input }) => {
       return await ctx.prisma.document.update({
         data: {
@@ -100,8 +100,9 @@ export const documentRouter = router({
     }),
 
   updateHtmlContent: protectedProcedure
-    .input(Document.pick({ htmlContent: true, id: true, modifiedDate: true }))
+    .input(Document.pick({ htmlContent: true, id: true }))
     .mutation(async ({ ctx, input }) => {
+      console.log(`updating html:  \n content: ${input.htmlContent}`);
       return await ctx.prisma.document.update({
         data: {
           htmlContent: input.htmlContent,
@@ -114,7 +115,7 @@ export const documentRouter = router({
     }),
 
   moveFolder: protectedProcedure
-    .input(Document.pick({ id: true, folderId: true, modifiedDate: true }))
+    .input(Document.pick({ id: true, folderId: true }))
     .mutation(async ({ ctx, input }) => {
       return await ctx.prisma.document.update({
         data: {

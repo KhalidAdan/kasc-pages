@@ -17,9 +17,7 @@ export default function Example() {
 
   return (
     <div
-      className={classNames(
-        dark ? "h-screen font-[Lora] dark:bg-onyx-900" : "h-screen font-[Lora]"
-      )}
+      className={classNames(dark ? "h-screen  dark:bg-onyx-900" : "h-screen ")}
     >
       <TopNav />
       <div className="mt-8"></div>

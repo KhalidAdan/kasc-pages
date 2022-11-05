@@ -44,6 +44,15 @@ export const bookRouter = router({
         },
       });
     }),
+  delete: protectedProcedure
+    .input(Book.pick({ id: true }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.book.delete({
+        where: {
+          id: input.id,
+        },
+      });
+    }),
   bootStrap: protectedProcedure.mutation(async ({ ctx }) => {
     return await ctx.prisma.book.create({
       data: {

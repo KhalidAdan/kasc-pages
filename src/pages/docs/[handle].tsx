@@ -34,7 +34,7 @@ const Docs: NextPage = () => {
 
   if (!data || error || isLoading) {
     return (
-      <div className="grid h-screen w-screen place-content-center font-[Lora] uppercase italic">
+      <div className="grid h-screen w-screen place-content-center  uppercase italic">
         {!error
           ? !isLoading
             ? `No data for Document # ${handle}`

@@ -1,4 +1,5 @@
 import { trpc } from "@/utils/trpc";
+import { Button } from "@mantine/core";
 import type { NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
 
@@ -12,15 +13,15 @@ const Home: NextPage = () => {
       <main>
         logged in mayne
         <br />
-        <button
+        <Button
           onClick={() => {
             bootstrapAccount.mutate();
           }}
         >
           Bootstrap app
-        </button>
+        </Button>
         <br />
-        <button onClick={() => clearUp.mutate()}>Reset DB</button>
+        <Button onClick={() => clearUp.mutate()}>Reset DB</Button>
       </main>
     );
 
@@ -28,7 +29,15 @@ const Home: NextPage = () => {
     <main>
       wat u doin here press the button if u cool
       <br />
-      <button onClick={() => signIn("discord")}>D I S C O R D</button>
+      <Button
+        onClick={() =>
+          signIn("discord", {
+            callbackUrl: "/projects",
+          })
+        }
+      >
+        D I S C O R D
+      </Button>
     </main>
   );
 };

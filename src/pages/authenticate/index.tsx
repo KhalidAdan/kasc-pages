@@ -1,5 +1,5 @@
 import TopNav from "@/components/TopNav";
-import { useMantineColorScheme } from "@mantine/core";
+import { Button } from "@mantine/core";
 import { NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -7,8 +7,6 @@ import { useRouter } from "next/router";
 const AuthHome: NextPage = () => {
   const { status } = useSession();
   const router = useRouter();
-  const { colorScheme } = useMantineColorScheme();
-  const dark = colorScheme === "dark";
 
   if (status === "loading") {
     return <div className="grid place-items-center">Loading...</div>;
@@ -16,9 +14,9 @@ const AuthHome: NextPage = () => {
   if (status === "authenticated") router.push(`/projects`);
 
   return (
-    <main className="h-full font-[Lora]">
+    <main className="h-full ">
       <TopNav authenticated={false} />
-      <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="flex min-h-full flex-col py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight ">
             Log in or Claim your account
@@ -32,8 +30,15 @@ const AuthHome: NextPage = () => {
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className=" space-y-4 py-8 px-4 sm:rounded-lg sm:px-10 ">
             <div>
-              <a
-                onClick={() => signIn("discord")}
+              <Button
+                component="a"
+                href="#"
+                variant="subtle"
+                onClick={() =>
+                  signIn("discord", {
+                    callbackUrl: "/projects",
+                  })
+                }
                 className="-sm inline-flex w-full cursor-pointer justify-center rounded-md border border-gray-600 py-2 px-4 text-sm  font-medium"
               >
                 <span className="sr-only">Sign in with Discord</span>
@@ -53,13 +58,15 @@ const AuthHome: NextPage = () => {
                     </clipPath>
                   </defs>
                 </svg>
-              </a>
+              </Button>
             </div>
 
             {/* <div>
               <a
                 href="#"
-                onClick={() => signIn("twitter")}
+                onClick={() => signIn("twitter", {
+            callbackUrl: "/projects",
+          })}
                 className="-sm inline-flex w-full cursor-pointer justify-center rounded-md border border-gray-600 py-2 px-4 text-sm  font-medium"
               >
                 <span className="sr-only">Sign in with Twitter</span>
@@ -75,9 +82,15 @@ const AuthHome: NextPage = () => {
             </div> */}
 
             <div>
-              <a
+              <Button
+                component="a"
+                variant="subtle"
                 href="#"
-                onClick={() => signIn("google")}
+                onClick={() =>
+                  signIn("google", {
+                    callbackUrl: "/projects",
+                  })
+                }
                 className="-sm inline-flex w-full cursor-pointer justify-center rounded-md border border-gray-600 py-2 px-4 text-sm  font-medium"
               >
                 <span className="sr-only">Sign in with Google</span>
@@ -90,7 +103,7 @@ const AuthHome: NextPage = () => {
                 >
                   <path d="M51.981 24.481c-7.717-.004-15.435-.002-23.152 0 .001 3.2-.004 6.401.002 9.6h13.407c-.518 3.068-2.34 5.873-4.926 7.6-1.625 1.093-3.492 1.802-5.416 2.139-1.938.33-3.94.373-5.872-.018a14.452 14.452 0 0 1-5.477-2.365 15.287 15.287 0 0 1-5.639-7.555c-1.048-3.079-1.056-6.505.005-9.58a15.266 15.266 0 0 1 3.57-5.8c1.986-2.033 4.567-3.486 7.348-4.082a14.57 14.57 0 0 1 7.223.294 13.333 13.333 0 0 1 5.305 3.116c1.512-1.503 3.017-3.016 4.527-4.523.792-.81 1.624-1.586 2.39-2.42-2.292-2.121-4.98-3.827-7.917-4.905-5.287-1.946-11.25-1.987-16.572-.145C14.79 7.891 9.682 12.377 6.85 18.046a24.477 24.477 0 0 0-2.138 6.184c-1.088 5.343-.33 11.04 2.135 15.908a24.788 24.788 0 0 0 6.684 8.215 24.487 24.487 0 0 0 8.94 4.508c4.098 1.099 8.46 1.074 12.586.135 3.728-.858 7.256-2.64 10.073-5.24 2.977-2.736 5.1-6.34 6.224-10.214 1.227-4.225 1.396-8.736.627-13.06z" />
                 </svg>
-              </a>
+              </Button>
             </div>
           </div>
         </div>

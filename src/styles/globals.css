@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 @layer utilities {
-  html,
-  body {
-    @apply h-screen;
-  }
-
   #__next {
-    @apply h-screen;
+    @apply h-full;
   }
+}
+
+@font-face {
+  font-family: 'Beaufort bold';
+  src: url('/fonts/Beaufort-bold.ttf');
 }

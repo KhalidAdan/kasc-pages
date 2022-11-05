@@ -6,18 +6,17 @@ export default function AppLayout({ children }) {
   const dark = colorScheme === "dark";
 
   return (
-    <div className="h-full">
+    <div
+      id="_chisala_app"
+      className={classNames(
+        dark ? "bg-onyx-800" : "text-onyx-800",
+        "min-h-full"
+      )}
+    >
       <div className="grid h-screen w-screen place-content-center uppercase italic md:hidden">
         Mobile site coming soon!
       </div>
-      <div
-        className={classNames(
-          dark ? "bg-onyx-800 font-[Lora]" : "font-[Lora] text-onyx-800",
-          "hidden h-full md:block"
-        )}
-      >
-        {children}
-      </div>
+      <div className="hidden h-full md:block">{children}</div>
     </div>
   );
 }

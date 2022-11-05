@@ -50,12 +50,17 @@ export default function DocumentList() {
   const handleDragEnd = (event) => {
     const { active, over } = event;
 
+    if (over == null) {
+      return;
+    }
     if (active.id !== over.id) {
       setDocuments((items) => {
         const oldIndex = items.findIndex((item) => item.id === active.id);
         const newIndex = items.findIndex((item) => item.id === over.id);
 
         const newArrayOrder = arrayMove(items, oldIndex, newIndex);
+
+        // re-order on backend
 
         return newArrayOrder;
       });

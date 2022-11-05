@@ -46,8 +46,7 @@ export default function DocumentListItem({
       ref={setNodeRef}
       style={style}
     >
-      <a
-        href={`/docs/${doc.id}`}
+      <div
         className={`${
           dark
             ? "bg-gray-800 transition-colors hover:bg-gray-700"
@@ -63,31 +62,31 @@ export default function DocumentListItem({
           <EllipsisVerticalIcon className="-ml-[18px] h-6 w-6" />
         </div>
         <div className="flex-1">
-          <Text
-            style={{
-              fontFamily: "Beaufort Bold",
-              fontSize: "12px",
-              fontWeight: 100,
-              lineHeight: "1.25rem",
-              letterSpacing: "2px",
-              textTransform: "uppercase",
-              color: "inherit",
-              width: "600px",
-              marginBottom: "6px",
-            }}
-          >
-            {doc.subtitle}
-          </Text>
-          <p className="text-2xl font-semibold uppercase">
-            {doc.title ?? "Untitled Document"}
-          </p>
+          <a href={`/docs/${doc.id}`}>
+            <Text
+              style={{
+                fontFamily: "Beaufort Bold",
+                fontSize: "12px",
+                fontWeight: 100,
+                lineHeight: "1.25rem",
+                letterSpacing: "2px",
+                textTransform: "uppercase",
+                color: "inherit",
+                width: "600px",
+                marginBottom: "6px",
+              }}
+            >
+              {doc.subtitle}
+            </Text>
+            <p className="text-2xl font-semibold uppercase">
+              {doc.title ?? "Untitled Document"}
+            </p>
+          </a>
         </div>
 
-        <Menu shadow="md" width={200}>
+        <Menu shadow="md" width={200} clickOutsideEvents={["drag", "drop"]}>
           <Menu.Target>
-            <EllipsisVerticalIcon
-              className={classNames("h-6 w-6 cursor-pointer")}
-            />
+            <EllipsisVerticalIcon className="z-40 h-6 w-6 cursor-pointer" />
           </Menu.Target>
           <Menu.Dropdown>
             <Menu.Item
@@ -104,7 +103,7 @@ export default function DocumentListItem({
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>
-      </a>
+      </div>
     </li>
   );
 }

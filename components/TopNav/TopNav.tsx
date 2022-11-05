@@ -1,7 +1,7 @@
 import { ActionIcon, Avatar, useMantineColorScheme } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
 import { AvailableFonts } from "contexts/FontContext";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import React from "react";
 import { MoonIcon, SunIcon } from "../Icons";
@@ -38,9 +38,7 @@ export const TopNav: React.FC<TopNavProps> = ({
   return (
     <div
       ref={ref}
-      className={`${
-        fixed && "fixed"
-      } z-10 flex w-full justify-between px-8 font-[Lora]`}
+      className={`${fixed && "fixed"} z-10 flex w-full justify-between px-8 `}
     >
       <div
         className={`flex items-end gap-8 pb-8 pt-8 transition-opacity delay-150 ${
@@ -95,6 +93,8 @@ export const TopNav: React.FC<TopNavProps> = ({
             }}
             color={dark ? "yellow" : "text-carolina-blue-500"}
             radius="xl"
+            onClick={() => signOut({ callbackUrl: "/authenticate" })}
+            className="shadow-lg"
           />
         )}
       </div>

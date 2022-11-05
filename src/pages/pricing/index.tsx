@@ -28,8 +28,8 @@ export default function Example() {
               Simple no-tricks pricing
             </h1>
             <p className="mt-4 text-xl ">
-              If you're not satisfied, contact us within the first 14 days and
-              we'll send you a full refund.
+              If you&apos;re not satisfied, contact us within the first 14 days
+              and we&apos;ll send you a full refund.
             </p>
           </div>
         </div>
@@ -46,7 +46,7 @@ export default function Example() {
                 <div className="mt-8">
                   <div className="flex items-center">
                     <h4 className="flex-shrink-0  pr-4 text-base font-semibold text-carolina-blue-500">
-                      What's included
+                      What&apos;s included
                     </h4>
                     <div
                       className={classNames(

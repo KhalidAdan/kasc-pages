@@ -3,6 +3,7 @@ import { useHover } from "@mantine/hooks";
 import { AvailableFonts } from "contexts/FontContext";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import { MoonIcon, SunIcon } from "../Icons";
 
@@ -53,11 +54,11 @@ export const TopNav: React.FC<TopNavProps> = ({
             className="rotate-[20deg]"
             alt=""
           />
-          <a href="/projects">
+          <Link href="/projects">
             <p className="font-[Afterglow] text-2xl font-semibold tracking-wide">
               Chisala
             </p>
-          </a>
+          </Link>
         </div>
         {showCounts ? (
           <p className="pb-1">

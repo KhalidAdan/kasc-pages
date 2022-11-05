@@ -204,7 +204,7 @@ const PomodoroModal = ({ pomoModalOpened, setPomoModalOpened }) => {
         </Text>
         <Text size="sm">
           No need to focus on the timer, just start and focus on your work.
-          We'll let you know when it's time to take a break!
+          We&apos;ll let you know when it&apos;s time to take a break!
         </Text>
         <Text className="mb-1 py-6 text-center text-4xl font-semibold">
           {displayTime}

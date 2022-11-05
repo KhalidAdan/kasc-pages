@@ -39,13 +39,7 @@ export default function DocumentListItem({
   };
 
   return (
-    <li
-      key={doc.id}
-      {...attributes}
-      {...listeners}
-      ref={setNodeRef}
-      style={style}
-    >
+    <li {...attributes} {...listeners} ref={setNodeRef} style={style}>
       <div
         className={`${
           dark

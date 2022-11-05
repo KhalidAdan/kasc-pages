@@ -83,8 +83,10 @@ export default function DocumentList() {
             items={documents}
             strategy={verticalListSortingStrategy}
           >
-            {documents.map((doc) => {
-              return <DocumentListItem refetch={refetch} doc={doc} />;
+            {documents.map((doc, index) => {
+              return (
+                <DocumentListItem refetch={refetch} doc={doc} key={index} />
+              );
             })}
           </SortableContext>
         </DndContext>

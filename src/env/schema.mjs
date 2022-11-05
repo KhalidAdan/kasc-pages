@@ -20,9 +20,6 @@ export const serverSchema = z.object({
   DISCORD_CLIENT_SECRET: z.string(),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
-  TWITTER_CLIENT_ID: z.string(),
-  TWITTER_CLIENT_SECRET: z.string(),
-  EMAIL_SERVER: z.string(),
 });
 
 /**

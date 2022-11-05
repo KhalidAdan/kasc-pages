@@ -94,7 +94,9 @@ export const TopNav: React.FC<TopNavProps> = ({
             color={dark ? "yellow" : "text-carolina-blue-500"}
             radius="xl"
             onClick={() => signOut({ callbackUrl: "/authenticate" })}
-            className="shadow-lg"
+            className={`transition-opacity delay-150 ${
+              fixed && (isVisible || hovered ? "opacity-100" : "opacity-0")
+            } shadow-lg`}
           />
         )}
       </div>

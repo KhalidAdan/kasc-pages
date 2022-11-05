@@ -18,13 +18,13 @@ export default function usePomodoroTimer(time?: keyof typeof PomodoroTimes): {
   userStarted: boolean;
   setUserStarted: React.Dispatch<React.SetStateAction<boolean>>;
 } {
-  time = time || "TEST_POMODORO";
+  time = time || "BASE_POMODORO";
 
   const [userStarted, setUserStarted] = React.useState(false);
   const [seconds, setSeconds] = React.useState(0);
-  const interval = useInterval(() => setSeconds((s) => s + 1), 1000); // increment seconds every second
+  const interval = useInterval(() => setSeconds((s) => s + 1), 1000);
   const reset = () => setSeconds(0);
-  const isTimerDone = seconds >= PomodoroTimes[time]; // is the timer done?
+  const isTimerDone = seconds >= PomodoroTimes[time];
 
   React.useEffect(() => {
     if (userStarted) interval.start();

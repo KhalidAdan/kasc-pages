@@ -1,8 +1,8 @@
 import usePomodoroTimer from "@/hooks/usePomodoroTimer";
 import {
   AdjustmentsVerticalIcon,
+  ArrowPathIcon,
   ClockIcon,
-  PauseIcon,
   PlayIcon,
   StopIcon,
 } from "@heroicons/react/24/outline";
@@ -37,30 +37,27 @@ const EditorSidebar = () => {
   const [opened, setOpened] = React.useState(false);
   const [pomoModalOpened, setPomoModalOpened] = React.useState(false);
   return (
-    <div className="fixed top-64 flex flex-col gap-4">
+    <div className="fixed top-96 flex flex-col gap-4">
       <Button
-        className={`font-Medium ml-2 cursor-pointer rounded-md px-3 py-2 ${
-          selectedFont && `font-[${selectedFont}] `
-        } ${dark ? "hover:bg-gray-600" : "hover:bg-gray-300"}`}
         onClick={() => setOpened(true)}
+        variant="subtle"
+        color={dark ? "yellow" : "blue"}
       >
         <AdjustmentsVerticalIcon className="h-6 w-6" />
       </Button>
 
       <Button
-        className={`font-Medium ml-2 mb-1 cursor-pointer rounded-md px-3 py-1 ${
-          selectedFont && `font-[${selectedFont}] `
-        } ${dark ? "hover:bg-gray-600" : "hover:bg-gray-300"}`}
         onClick={() => setPomoModalOpened(true)}
+        variant="subtle"
+        color={dark ? "yellow" : "blue"}
       >
         <ClockIcon className="h-6 w-6" />
       </Button>
 
       <Button
-        className={`font-Medium ml-2 cursor-pointer rounded-md px-3 py-2 ${
-          selectedFont && `font-[${selectedFont}] `
-        } ${dark ? "hover:bg-gray-600" : "hover:bg-gray-300"}`}
         onClick={() => toggleFullscreen()}
+        variant="subtle"
+        color={dark ? "yellow" : "blue"}
       >
         {!fullscreen ? (
           <svg
@@ -120,13 +117,16 @@ const SettingsModal = ({ opened, setOpened }) => {
         centered
         opened={opened}
         onClose={() => setOpened(false)}
-        title="Settings Modal"
+        title="Settings"
       >
         <Select
           label="Font Family"
           value={selectedFont}
           onChange={setFont as any}
-          data={[...SupportedFonts]}
+          data={SupportedFonts.map((font) => ({
+            label: font,
+            value: font,
+          }))}
           styles={{
             wrapper: {
               ":focus": {
@@ -176,13 +176,16 @@ const SettingsModal = ({ opened, setOpened }) => {
           onChange={setFontSize}
           scale={(v) => v + 100}
         />
-        <Space h={"md"} />
+        <Space h={"xl"} />
       </Modal>
     </>
   );
 };
 
 const PomodoroModal = ({ pomoModalOpened, setPomoModalOpened }) => {
+  const { colorScheme } = useMantineColorScheme();
+  const dark = colorScheme === "dark";
+
   const { displayTime, start, stop, reset, userStarted, setUserStarted } =
     usePomodoroTimer();
 
@@ -194,45 +197,54 @@ const PomodoroModal = ({ pomoModalOpened, setPomoModalOpened }) => {
         onClose={() => setPomoModalOpened(false)}
         title="Pomodoro Timer"
       >
-        <Text size="sm" mb={12}>
+        <Text size="sm" className="mb-2.5">
           The Pomodoro Technique is a time management method for students,
           perfectionists, and procrastinators of all kinds. Work in focused,
           25-minute intervals.
         </Text>
-        <Text className="mb-1 py-6 text-4xl font-semibold" align="center">
+        <Text size="sm">
+          No need to focus on the timer, just start and focus on your work.
+          We'll let you know when it's time to take a break!
+        </Text>
+        <Text className="mb-1 py-6 text-center text-4xl font-semibold">
           {displayTime}
         </Text>
 
-        <Button
-          variant="subtle"
-          onClick={(e) => {
-            if (!userStarted) {
-              start();
-              setUserStarted(true);
-            }
-          }}
-          leftIcon={<PlayIcon className="h-6 w-6" />}
-        >
-          Start
-        </Button>
-        <Button
-          variant="subtle"
-          onClick={(e) => {
-            stop();
-          }}
-          leftIcon={<PauseIcon className="h-6 w-6" />}
-        >
-          Pause
-        </Button>
-        <Button
-          variant="subtle"
-          onClick={(e) => {
-            reset();
-          }}
-          leftIcon={<StopIcon className="h-6 w-6" />}
-        >
-          Reset
-        </Button>
+        <div className="flex w-full flex-col gap-1">
+          <Button
+            variant="subtle"
+            color={dark ? "yellow" : "blue"}
+            onClick={(e) => {
+              if (!userStarted) {
+                start();
+                setUserStarted(true);
+              }
+            }}
+            leftIcon={<PlayIcon className="h-6 w-6" />}
+          >
+            Start
+          </Button>
+          <Button
+            variant="subtle"
+            color={dark ? "yellow" : "blue"}
+            onClick={(e) => {
+              stop();
+            }}
+            leftIcon={<StopIcon className="h-6 w-6" />}
+          >
+            Stop
+          </Button>
+          <Button
+            variant="subtle"
+            color={dark ? "yellow" : "blue"}
+            onClick={(e) => {
+              reset();
+            }}
+            leftIcon={<ArrowPathIcon className="h-6 w-6" />}
+          >
+            Reset
+          </Button>
+        </div>
       </Modal>
     </>
   );

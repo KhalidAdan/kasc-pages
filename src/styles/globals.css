@@ -10,5 +10,13 @@
 
 @font-face {
   font-family: 'Beaufort bold';
-  src: url('/fonts/Beaufort-bold.ttf');
+  src: url('/fonts/Beaufort-Bold.ttf');
+}
+@font-face {
+  font-family: 'Beaufort';
+  src: url('/fonts/Beaufort-Regular.ttf');
+}
+@font-face {
+  font-family: 'Ghaitsa';
+  src: url('/fonts/Ghaitsa.ttf');
 }

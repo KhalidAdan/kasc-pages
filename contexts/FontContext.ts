@@ -3,8 +3,10 @@ import React from "react";
 export const SupportedFonts = [
   "Lora",
   "Arial",
+  "Helvetica",
   "Dank Mono",
-  "Beaufort Bold",
+  "Beaufort",
+  "Ghaitsa",
   "Poppins",
   "Source Code Pro",
   "Afterglow",

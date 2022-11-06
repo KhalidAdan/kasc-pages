@@ -20,6 +20,7 @@ export const StyledReactQuill = styled(ReactQuill)<ExtraProps>`
     outline: none;
   }
 
+  .msreadout-highlight,
   .ql-editor p,
   .ql-editor blockquote {
     margin-bottom: 1em;

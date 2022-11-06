@@ -59,13 +59,13 @@ const ProjectsList = () => {
   if (error) return <div>An error occured</div>;
 
   return (
-    <div>
+    <>
       <TopNav authenticated />
       <main className="mx-auto max-w-4xl">
         <h1 className="mb-16 mt-8 text-3xl">Projects</h1>
         <ul role="list" className="grid grid-cols-3 gap-4">
           {books.map((book, index) => (
-            <ProjectListItem book={book} refetch={refetch} key={index} />
+            <ProjectListItem book={book} refetch={refetch} index={index} />
           ))}
           <AddNewProject books={books} setModalOpened={setModalOpened} />
         </ul>
@@ -86,7 +86,7 @@ const ProjectsList = () => {
             name="title"
             onChange={(e) => setTitle(e.target.value)}
             value={title}
-            placeholder="Enter the project title, you can edit it later"
+            placeholder="Enter the project title"
             className="mb-4"
             styles={{
               input: {
@@ -110,7 +110,7 @@ const ProjectsList = () => {
           </Button>
         </Modal>
       </main>
-    </div>
+    </>
   );
 };
 

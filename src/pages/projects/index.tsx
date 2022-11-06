@@ -3,7 +3,7 @@ import AppLayout from "layouts/AppLayout";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
-export default function ProjectsHome() {
+function ProjectsHome() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -23,3 +23,5 @@ export default function ProjectsHome() {
     </AppLayout>
   );
 }
+
+export default ProjectsHome;

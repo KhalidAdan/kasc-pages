@@ -1,5 +1,4 @@
 // src/pages/_app.tsx
-import useLocalStorage from "@/hooks/useLocalStorage";
 import {
   ColorScheme,
   ColorSchemeProvider,
@@ -11,7 +10,7 @@ import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import type { AppType } from "next/app";
 import Head from "next/head";
-import { useState } from "react";
+import React, { useState } from "react";
 import "react-quill/dist/quill.bubble.css";
 import "react-quill/dist/quill.snow.css";
 import "../styles/globals.css";
@@ -21,12 +20,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
-  const [font, setFont] = useLocalStorage<AvailableFonts>("font", "Lora");
-  const [fontSize, setFontSize] = useLocalStorage<number>("fontSize", 60);
-  const [lineHeight, setLineHeight] = useLocalStorage<string>(
-    "lineHeight",
-    "1.75"
-  );
+  const [font, setFont] = React.useState<AvailableFonts>("Lora");
+  const [fontSize, setFontSize] = React.useState(60);
+  const [lineHeight, setLineHeight] = React.useState("1.75");
 
   const [colorScheme, setColorScheme] = useState<ColorScheme>("dark");
   const toggleColorScheme = (value?: ColorScheme) => {

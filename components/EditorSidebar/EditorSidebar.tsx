@@ -145,7 +145,9 @@ const SettingsModal = ({ opened, setOpened }) => {
         <Select
           label="Line Height"
           value={lineHeight}
-          onChange={setLineHeight}
+          onChange={(line) => {
+            if (line) setLineHeight(line);
+          }}
           data={["0.75", "1", "1.25", "1.5", "1.75", "2", "2.25", "2.5"]}
           styles={{
             wrapper: {

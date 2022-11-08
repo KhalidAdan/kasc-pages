@@ -1,11 +1,12 @@
 import useElementOnScreen from "@/hooks/useElementOnScreen";
 import useFormWordCount from "@/hooks/useFormWordCount";
+import { classNames } from "@/utils/classNames";
 import { toolbarOptions } from "@/utils/ToolbarOptions";
 import { trpc } from "@/utils/trpc";
 import { Textarea, TextInput, useMantineColorScheme } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { useForm, UseFormReturnType } from "@mantine/form";
 import { Document } from "@prisma/client";
-import FontContext from "contexts/FontContext";
+import FontContext, { AvailableFonts } from "contexts/FontContext";
 import React from "react";
 import EditorSidebar from "../EditorSidebar/EditorSidebar";
 import { StyledReactQuill } from "../RichText/RichText";
@@ -23,19 +24,19 @@ const Editor: React.FC<{ data: Document }> = ({ data }) => {
 
   const [isVisible, titleRef] = useElementOnScreen();
 
-  const form = useForm<FormValues>({
+  const form: UseFormReturnType<
+    FormValues,
+    (values: FormValues) => FormValues
+  > = useForm<FormValues>({
     initialValues: {
       title: data.title ?? "",
       subtitle: data.subtitle ?? "",
       htmlContent: data.htmlContent,
-      fontFace: selectedFont,
     },
   });
 
   const [pageCount, wordCount] = useFormWordCount(form);
 
-  const mutateDocumentTitle = trpc.document.updateTitle.useMutation();
-  const mutateDocumentSubtitle = trpc.document.updateSubtitle.useMutation();
   const mutateHTMLContent = trpc.document.updateHtmlContent.useMutation();
 
   return (
@@ -52,77 +53,22 @@ const Editor: React.FC<{ data: Document }> = ({ data }) => {
         <EditorSidebar />
         {/* WYSIWYG Editor */}
         <div className="mx-auto max-w-[840px] pb-52 pt-40">
-          <div className="flex w-full flex-col items-center pb-6">
-            <TextInput
-              placeholder="Add a chapter, subtitle, etc."
-              className="text-center "
-              styles={{
-                wrapper: {
-                  ":focus": {
-                    border: "none !important",
-                    boxShadow: "none !important",
-                  },
-                },
-                input: {
-                  border: "none",
-                  textAlign: "center",
-                  fontFamily: selectedFont ?? "Lora",
-                  fontSize: `${fontSize + 50}%`,
-                  fontWeight: 400,
-                  lineHeight: "1.25rem",
-                  letterSpacing: "2px",
-                  textTransform: "uppercase",
-                  color: "inherit",
-                  width: "600px",
-                  wordBreak: "break-word",
-                  ":focus": {
-                    border: "none !important",
-                    boxShadow: "none !important",
-                  },
-                  backgroundColor: dark && "#141414 !important",
-                },
-              }}
-              {...form.getInputProps("subtitle")}
-              onChange={(e) => {
-                form.getInputProps("subtitle").onChange(e);
-                mutateDocumentSubtitle.mutate({
-                  id: data.id,
-                  subtitle: e.target.value,
-                });
-              }}
+          <div className={classNames("flex w-full flex-col items-center pb-6")}>
+            <Subtitle
+              fontFamily={selectedFont}
+              fontSize={`${fontSize + 50}%`}
+              isDarkMode={dark}
+              form={form}
+              documentId={data.id}
             />
-            <Textarea
-              className="z-20"
-              ref={titleRef}
-              placeholder="Add a title"
-              {...form.getInputProps("title")}
-              onChange={(e) => {
-                form.getInputProps("title").onChange(e);
-                mutateDocumentTitle.mutate({
-                  id: data.id,
-                  title: e.target.value,
-                });
-              }}
-              styles={{
-                input: {
-                  border: "none",
-                  textAlign: "center",
-                  fontSize: `${fontSize + 120}%`,
-                  fontWeight: 600,
-                  fontFamily: selectedFont ?? "Lora",
-                  letterSpacing: "2px",
-                  textTransform: "uppercase",
-                  color: "inherit",
-                  width: "600px",
-                  wordBreak: "break-word",
-                  ":focus": {
-                    border: "none !important",
-                    boxShadow: "none !important",
-                  },
-                  backgroundColor:
-                    colorScheme == "dark" && "#141414 !important",
-                },
-              }}
+
+            <Title
+              titleRef={titleRef}
+              fontFamily={selectedFont}
+              fontSize={`${fontSize + 120}%`}
+              isDarkMode={dark}
+              form={form}
+              documentId={data.id}
             />
           </div>
           <div>
@@ -153,3 +99,115 @@ const Editor: React.FC<{ data: Document }> = ({ data }) => {
 };
 
 export default Editor;
+
+type SubtitleProps = {
+  fontSize: string;
+  fontFamily: AvailableFonts;
+  isDarkMode: boolean;
+  form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
+  documentId: string;
+};
+
+const Subtitle: React.FC<SubtitleProps> = ({
+  fontSize,
+  fontFamily,
+  isDarkMode,
+  form,
+  documentId,
+}) => {
+  const mutateDocumentSubtitle = trpc.document.updateSubtitle.useMutation();
+
+  return (
+    <TextInput
+      placeholder="Add a chapter, subtitle, etc."
+      styles={{
+        wrapper: {
+          ":focus": {
+            border: "none !important",
+            boxShadow: "none !important",
+          },
+        },
+        input: {
+          border: "none",
+          textAlign: "center",
+          fontSize: fontSize,
+          fontFamily: fontFamily,
+          fontWeight: 400,
+          lineHeight: "1.25rem",
+          letterSpacing: "2px",
+          textTransform: "uppercase",
+          color: "inherit",
+          width: "600px",
+          wordBreak: "break-word",
+          ":focus": {
+            border: "none !important",
+            boxShadow: "none !important",
+          },
+          backgroundColor: isDarkMode && "#141414 !important",
+        },
+      }}
+      {...form.getInputProps("subtitle")}
+      onChange={(e) => {
+        form.getInputProps("subtitle").onChange(e);
+        mutateDocumentSubtitle.mutate({
+          id: documentId,
+          subtitle: e.target.value,
+        });
+      }}
+    />
+  );
+};
+
+type TitleProps = {
+  titleRef: React.RefObject<HTMLDivElement>;
+  form: UseFormReturnType<FormValues, (values: FormValues) => FormValues>;
+  documentId: Document["id"];
+  fontSize: string;
+  fontFamily: AvailableFonts;
+  isDarkMode: boolean;
+};
+
+const Title: React.FC<TitleProps> = ({
+  titleRef,
+  form,
+  documentId,
+  fontSize,
+  fontFamily,
+  isDarkMode,
+}) => {
+  const mutateDocumentTitle = trpc.document.updateTitle.useMutation();
+
+  return (
+    <Textarea
+      ref={titleRef}
+      placeholder="Add a title"
+      {...form.getInputProps("title")}
+      onChange={(e) => {
+        form.getInputProps("title").onChange(e);
+        mutateDocumentTitle.mutate({
+          id: documentId,
+          title: e.target.value,
+        });
+      }}
+      styles={{
+        input: {
+          border: "none",
+          textAlign: "center",
+          fontSize: fontSize,
+          fontFamily: fontFamily,
+          fontWeight: 600,
+          letterSpacing: "2px",
+          textTransform: "uppercase",
+          color: "inherit",
+          width: "600px",
+          wordBreak: "break-word",
+          ":focus": {
+            border: "none !important",
+            boxShadow: "none !important",
+          },
+          backgroundColor: isDarkMode && "#141414 !important",
+        },
+      }}
+    />
+  );
+};

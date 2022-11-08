@@ -8,7 +8,8 @@ const includedFeatures = [
   "Export work as HTML, PDF, or Word",
   "Reduced Pricing for Students",
   "Schedule and Publish writing snippets to instagram and twitter",
-  "Focused writing mode",
+  "Focused writing mode based on the pomodoro method",
+  "Supporting a small software design shop!",
 ];
 
 export default function Example() {
@@ -29,7 +30,7 @@ export default function Example() {
             </h1>
             <p className="mt-4 text-xl ">
               If you&apos;re not satisfied, contact us within the first 14 days
-              and we&apos;ll send you a full refund.
+              and we&apos;ll send you a full refund, no questions asked.
             </p>
           </div>
         </div>
@@ -82,8 +83,8 @@ export default function Example() {
                 </h4>
                 <div className="mt-4 flex items-center justify-center text-5xl font-bold tracking-tight ">
                   <span>$4</span>
-                  <span className="ml-2 text-xl font-medium tracking-normal ">
-                    .00
+                  <span className="ml-2 text-xl font-medium tracking-normal">
+                    .00 USD
                   </span>
                 </div>
 
@@ -93,7 +94,7 @@ export default function Example() {
                       href="#"
                       className="flex items-center justify-center rounded-md border border-transparent bg-carolina-blue-500 px-5 py-3 text-base font-medium text-white hover:bg-carolina-blue-700 "
                     >
-                      Start scribbling
+                      Get started
                     </a>
                   </div>
                 </div>

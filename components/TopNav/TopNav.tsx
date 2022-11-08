@@ -1,6 +1,5 @@
 import { ActionIcon, Avatar, useMantineColorScheme } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
-import { AvailableFonts } from "contexts/FontContext";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,7 +10,6 @@ export interface FormValues {
   title: string;
   subtitle: string;
   htmlContent: string;
-  fontFace: AvailableFonts;
 }
 
 type TopNavProps = {
@@ -55,7 +53,7 @@ export const TopNav: React.FC<TopNavProps> = ({
             alt=""
           />
           <Link href="/projects">
-            <p className="font-[Afterglow] text-2xl font-semibold tracking-wide">
+            <p className="font-[Ghaitsa] text-2xl font-semibold tracking-wide">
               Chisala
             </p>
           </Link>

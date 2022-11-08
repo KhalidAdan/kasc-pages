@@ -18,7 +18,7 @@ import { DocumentPlusIcon } from "@heroicons/react/24/outline";
 import { Document } from "@prisma/client";
 import { useRouter } from "next/router";
 import React from "react";
-import DocumentListItem from "../DocumentListItem/DocumentListItem";
+import DocumentListItem from "../DocumentListItem";
 
 export default function DocumentList() {
   const [documents, setDocuments] = React.useState<Document[]>([]);
@@ -32,6 +32,8 @@ export default function DocumentList() {
       refetch();
     },
   });
+
+  const updateDocumentOrder = trpc.document.updateDocumentOrder.useMutation();
   const folder = book?.folders.find((folder) => folder.title === "Manuscript");
 
   React.useEffect(() => {
@@ -58,11 +60,16 @@ export default function DocumentList() {
         const oldIndex = items.findIndex((item) => item.id === active.id);
         const newIndex = items.findIndex((item) => item.id === over.id);
 
-        const newArrayOrder = arrayMove(items, oldIndex, newIndex);
+        const newArray = arrayMove(items, oldIndex, newIndex);
 
-        // re-order on backend
+        // re-order in db
+        const updatedDisplayOrder = newArray.map((item, index) => ({
+          id: item.id,
+          displayOrder: index + 1,
+        }));
+        updateDocumentOrder.mutate({ documents: updatedDisplayOrder });
 
-        return newArrayOrder;
+        return newArray;
       });
     }
   };

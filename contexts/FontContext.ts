@@ -16,11 +16,11 @@ export type AvailableFonts = typeof SupportedFonts[number];
 
 export const FontContext = React.createContext<{
   font: AvailableFonts;
-  setFont: React.Dispatch<React.SetStateAction<AvailableFonts | null>>;
+  setFont: React.Dispatch<React.SetStateAction<AvailableFonts>>;
   fontSize: number;
-  setFontSize: React.Dispatch<React.SetStateAction<number | null>>;
+  setFontSize: React.Dispatch<React.SetStateAction<number>>;
   lineHeight: string;
-  setLineHeight: React.Dispatch<React.SetStateAction<string | null>>;
+  setLineHeight: React.Dispatch<React.SetStateAction<string>>;
 }>({
   font: "Lora",
   setFont: (font: AvailableFonts) => {},

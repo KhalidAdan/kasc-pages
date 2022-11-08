@@ -18,9 +18,11 @@ import { Book } from "@prisma/client";
 export default function ProjectListItem({
   book,
   refetch,
+  index,
 }: {
   book: Book;
   refetch: ReturnType<typeof trpc.book.getByUserId.useQuery>["refetch"];
+  index: number;
 }) {
   const { colorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
@@ -33,6 +35,7 @@ export default function ProjectListItem({
 
   return (
     <li
+      key={index}
       className={classNames(
         "rounded-md border-2 shadow-md",
         dark ? "border-gray-600" : "border-gray-300"

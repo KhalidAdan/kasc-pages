@@ -1,5 +1,6 @@
 import useElementOnScreen from "@/hooks/useElementOnScreen";
 import useFormWordCount from "@/hooks/useFormWordCount";
+import { RefetchDocument } from "@/pages/docs/[handle]";
 import { classNames } from "@/utils/classNames";
 import { toolbarOptions } from "@/utils/ToolbarOptions";
 import { trpc } from "@/utils/trpc";
@@ -13,7 +14,10 @@ import { StyledReactQuill } from "../RichText/RichText";
 import TopNav from "../TopNav";
 import { FormValues } from "../TopNav/TopNav";
 
-const Editor: React.FC<{ data: Document }> = ({ data }) => {
+const Editor: React.FC<{ document: Document; refetch: RefetchDocument }> = ({
+  document,
+  refetch,
+}) => {
   const {
     font: selectedFont,
     fontSize,
@@ -29,11 +33,13 @@ const Editor: React.FC<{ data: Document }> = ({ data }) => {
     (values: FormValues) => FormValues
   > = useForm<FormValues>({
     initialValues: {
-      title: data.title ?? "",
-      subtitle: data.subtitle ?? "",
-      htmlContent: data.htmlContent,
+      title: document.title ?? "",
+      subtitle: document.subtitle ?? "",
+      htmlContent: document.htmlContent,
     },
   });
+
+  console.log("locked", document.locked);
 
   const [pageCount, wordCount] = useFormWordCount(form);
 
@@ -50,7 +56,7 @@ const Editor: React.FC<{ data: Document }> = ({ data }) => {
       />
       <div className="flex items-center">
         {/* Sidebar */}
-        <EditorSidebar />
+        <EditorSidebar document={document} refetch={refetch} />
         {/* WYSIWYG Editor */}
         <div className="mx-auto max-w-[840px] pb-52 pt-40">
           <div className={classNames("flex w-full flex-col items-center pb-6")}>
@@ -59,7 +65,7 @@ const Editor: React.FC<{ data: Document }> = ({ data }) => {
               fontSize={`${fontSize + 50}%`}
               isDarkMode={dark}
               form={form}
-              documentId={data.id}
+              documentId={document.id}
             />
 
             <Title
@@ -68,7 +74,7 @@ const Editor: React.FC<{ data: Document }> = ({ data }) => {
               fontSize={`${fontSize + 120}%`}
               isDarkMode={dark}
               form={form}
-              documentId={data.id}
+              documentId={document.id}
             />
           </div>
           <div>
@@ -82,7 +88,7 @@ const Editor: React.FC<{ data: Document }> = ({ data }) => {
               onChange={(str) => {
                 form.getInputProps("htmlContent").onChange(str);
                 mutateHTMLContent.mutate({
-                  id: data.id,
+                  id: document.id,
                   htmlContent: str,
                 });
               }}
@@ -90,6 +96,7 @@ const Editor: React.FC<{ data: Document }> = ({ data }) => {
               modules={{
                 toolbar: toolbarOptions,
               }}
+              readOnly={document.locked}
             />
           </div>
         </div>

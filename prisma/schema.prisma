@@ -3,6 +3,7 @@
 
 generator client {
   provider        = "prisma-client-js"
+  url             = env("DATABASE_URL")
   previewFeatures = ["referentialIntegrity"]
 }
 
@@ -16,6 +17,7 @@ model Book {
   id           String    @id @default(uuid())
   title        String    @unique
   image        String?
+  locked       Boolean   @default(false)
   folders      Folder[]
   createdDate  DateTime  @default(now())
   modifiedDate DateTime?
@@ -30,6 +32,7 @@ model Document {
   state             DocumentState @default(DRAFT)
   htmlContent       String        @default("<p><br></p>") @db.LongText
   displayOrder      Int
+  locked            Boolean       @default(false)
   Folder            Folder?       @relation(fields: [folderId], references: [id])
   folderId          String?
   markedForDeletion DateTime?

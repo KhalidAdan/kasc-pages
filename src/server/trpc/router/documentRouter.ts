@@ -8,6 +8,7 @@ const Document = z.object({
   subtitle: z.string().optional(),
   state: z.enum(["DRAFT", "PUBLISHED"]).default("DRAFT"),
   htmlContent: z.string(),
+  locked: z.boolean().default(false),
   folderId: z.string().optional(),
   bookId: z.string().optional(),
   markedForDeletion: z.date().optional(),
@@ -136,6 +137,20 @@ export const documentRouter = router({
       } catch (error) {
         console.log(error);
       }
+    }),
+
+  toggleDocumentLock: protectedProcedure
+    .input(Document.pick({ id: true, locked: true }))
+    .mutation(async ({ ctx, input }) => {
+      console.log(input.id);
+      return await ctx.prisma.document.update({
+        data: {
+          locked: input.locked,
+        },
+        where: {
+          id: input.id,
+        },
+      });
     }),
 
   moveFolder: protectedProcedure

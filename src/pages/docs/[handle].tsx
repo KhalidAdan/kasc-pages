@@ -7,6 +7,10 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
 
+export type RefetchDocument = ReturnType<
+  typeof trpc.document.getDocument.useQuery
+>["refetch"];
+
 const Docs: NextPage = () => {
   useSaveNotification();
   const { data: session, status } = useSession();
@@ -46,7 +50,7 @@ const Docs: NextPage = () => {
 
   return (
     <AppLayout>
-      <Editor data={data} />
+      <Editor document={data} refetch={refetch} />
     </AppLayout>
   );
 };

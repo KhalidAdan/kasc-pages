@@ -1,8 +1,12 @@
 import usePomodoroTimer from "@/hooks/usePomodoroTimer";
+import { RefetchDocument } from "@/pages/docs/[handle]";
+import { trpc } from "@/utils/trpc";
 import {
   AdjustmentsVerticalIcon,
   ArrowPathIcon,
   ClockIcon,
+  LockClosedIcon,
+  LockOpenIcon,
   PlayIcon,
   StopIcon,
 } from "@heroicons/react/24/outline";
@@ -16,21 +20,22 @@ import {
   useMantineColorScheme,
 } from "@mantine/core";
 import { useFullscreen } from "@mantine/hooks";
+import { showNotification } from "@mantine/notifications";
+import { Document } from "@prisma/client";
 import FontContext, { SupportedFonts } from "contexts/FontContext";
 import React from "react";
 
-const EditorSidebar = () => {
+const EditorSidebar: React.FC<{
+  document: Document;
+  refetch: RefetchDocument;
+}> = ({ document, refetch }) => {
   const { colorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
 
-  const {
-    font: selectedFont,
-    setFont,
-    fontSize,
-    setFontSize,
-    lineHeight,
-    setLineHeight,
-  } = React.useContext(FontContext);
+  const toggleDocumentLock = trpc.document.toggleDocumentLock.useMutation();
+  const [documentLocked, setDocumentLocked] = React.useState<boolean>(
+    document.locked
+  );
 
   const { toggle: toggleFullscreen, fullscreen } = useFullscreen();
 
@@ -65,11 +70,11 @@ const EditorSidebar = () => {
             className="icon icon-tabler icon-tabler-maximize"
             width="24"
             height="24"
-            stroke-width="2"
+            strokeWidth="2"
             stroke="currentColor"
             fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
             <path d="M0 0h24v24H0z" stroke="none" />
             <path d="M4 8V6a2 2 0 0 1 2-2h2M4 16v2a2 2 0 0 0 2 2h2M16 4h2a2 2 0 0 1 2 2v2M16 20h2a2 2 0 0 0 2-2v-2" />
@@ -79,15 +84,38 @@ const EditorSidebar = () => {
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
-            stroke-width="2"
+            strokeWidth="2"
             stroke="currentColor"
             fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
             <path d="M0 0h24v24H0z" stroke="none" />
             <path d="M15 19v-2a2 2 0 0 1 2-2h2M15 5v2a2 2 0 0 0 2 2h2M5 15h2a2 2 0 0 1 2 2v2M5 9h2a2 2 0 0 0 2-2V5" />
           </svg>
+        )}
+      </Button>
+
+      <Button
+        onClick={async () => {
+          await toggleDocumentLock.mutateAsync({
+            id: document.id,
+            locked: !documentLocked,
+          });
+          showNotification({
+            title: "Document unlocked",
+            message: "This document is now unlocked, and editable. Woo!",
+          });
+          setDocumentLocked(!documentLocked);
+          refetch();
+        }}
+        variant="subtle"
+        color={dark ? "yellow" : "blue"}
+      >
+        {documentLocked ? (
+          <LockClosedIcon className="h-6 w-6" />
+        ) : (
+          <LockOpenIcon className="h-6 w-6" />
         )}
       </Button>
 

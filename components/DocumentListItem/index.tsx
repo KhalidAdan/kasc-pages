@@ -30,16 +30,15 @@ export default function DocumentListItem({
     },
   });
 
-  const { attributes, listeners, setNodeRef, transform, transition } =
+  const { attributes, listeners, setNodeRef, transform, setActivatorNodeRef } =
     useSortable({ id: doc.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
   };
 
   return (
-    <li {...attributes} {...listeners} ref={setNodeRef} style={style}>
+    <li ref={setNodeRef} style={style}>
       <div
         className={`${
           dark
@@ -48,6 +47,9 @@ export default function DocumentListItem({
         } flex gap-4 px-14 py-10 shadow sm:rounded-md sm:px-6`}
       >
         <div
+          ref={setActivatorNodeRef}
+          {...listeners}
+          {...attributes}
           className={classNames(
             "-my-10 -ml-14 mr-6 flex cursor-move items-center"
           )}

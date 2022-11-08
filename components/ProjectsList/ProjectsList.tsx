@@ -65,7 +65,12 @@ const ProjectsList = () => {
         <h1 className="mb-16 mt-8 text-3xl">Projects</h1>
         <ul role="list" className="grid grid-cols-3 gap-4">
           {books.map((book, index) => (
-            <ProjectListItem book={book} refetch={refetch} index={index} />
+            <ProjectListItem
+              book={book}
+              refetch={refetch}
+              index={index}
+              key={index}
+            />
           ))}
           <AddNewProject books={books} setModalOpened={setModalOpened} />
         </ul>

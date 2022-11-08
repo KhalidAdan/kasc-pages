@@ -24,4 +24,16 @@ function ProjectsHome() {
   );
 }
 
+// async function getData() {
+//   const books = await prisma.book.findMany({
+//     where: {
+//       userId: "fa36d4e0-0eb3-44d5-a9be-f47b29ab518e",
+//     },
+//     orderBy: {
+//       modifiedDate: "desc",
+//     },
+//   });
+//   return JSON.stringify(books);
+// }
+
 export default ProjectsHome;

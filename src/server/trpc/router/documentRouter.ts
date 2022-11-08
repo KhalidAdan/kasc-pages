@@ -1,3 +1,4 @@
+import { Document } from "@prisma/client";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
@@ -12,6 +13,15 @@ const Document = z.object({
   markedForDeletion: z.date().optional(),
   createdDate: z.date().optional(),
   modifiedDate: z.date().optional(),
+});
+
+const OrderedDocuments = z.object({
+  documents: z.array(
+    z.object({
+      id: z.string(),
+      displayOrder: z.number(),
+    })
+  ),
 });
 
 export type DocumentType = z.infer<typeof Document>;
@@ -112,6 +122,20 @@ export const documentRouter = router({
           id: input.id,
         },
       });
+    }),
+
+  updateDocumentOrder: protectedProcedure
+    .input(OrderedDocuments)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        return await ctx.prisma.$executeRawUnsafe<Document[]>(
+          `INSERT INTO Document (id, displayOrder) VALUES ${input.documents.map(
+            (d) => `("${d.id}", ${d.displayOrder})`
+          )} ON DUPLICATE KEY UPDATE id=VALUES(id), displayOrder=VALUES(displayOrder);`
+        );
+      } catch (error) {
+        console.log(error);
+      }
     }),
 
   moveFolder: protectedProcedure

@@ -126,7 +126,7 @@ const Subtitle: React.FC<SubtitleProps> = ({
     <input
       placeholder="Add a chapter, subtitle, etc."
       className={classNames(
-        "focus:box-shadow-none w-[600px] border-none text-center uppercase leading-5 tracking-[2px] outline-none focus:border-none focus:outline-none",
+        "w-[600px] border-none text-center uppercase leading-5 tracking-[2px] outline-none focus:border-none",
         `font-[${fontFamily}]`,
         `text-[${fontSize}]`,
         isDarkMode && "bg-onyx-800"
@@ -175,7 +175,7 @@ const Title: React.FC<TitleProps> = ({
         });
       }}
       className={classNames(
-        "focus:box-shadow-none min-h-9 block h-auto w-[600px] resize-none border-none px-3 text-center text-3xl font-semibold uppercase leading-[1.55] tracking-[2px] outline-none focus:border-none focus:outline-none",
+        "min-h-9 block h-auto w-[600px] resize-none border-none px-3 text-center text-3xl font-semibold uppercase leading-[1.55] tracking-[2px] focus:ring-0",
         `font-[${fontFamily}]`,
         `text-[${fontSize}]`,
         isDarkMode && "bg-onyx-800"

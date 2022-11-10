@@ -4,7 +4,7 @@ import { RefetchDocument } from "@/pages/docs/[handle]";
 import { classNames } from "@/utils/classNames";
 import { toolbarOptions } from "@/utils/ToolbarOptions";
 import { trpc } from "@/utils/trpc";
-import { Textarea, TextInput, useMantineColorScheme } from "@mantine/core";
+import { useMantineColorScheme } from "@mantine/core";
 import { useForm, UseFormReturnType } from "@mantine/form";
 import { Document } from "@prisma/client";
 import FontContext, { AvailableFonts } from "contexts/FontContext";
@@ -38,8 +38,6 @@ const Editor: React.FC<{ document: Document; refetch: RefetchDocument }> = ({
       htmlContent: document.htmlContent,
     },
   });
-
-  console.log("locked", document.locked);
 
   const [pageCount, wordCount] = useFormWordCount(form);
 
@@ -125,34 +123,14 @@ const Subtitle: React.FC<SubtitleProps> = ({
   const mutateDocumentSubtitle = trpc.document.updateSubtitle.useMutation();
 
   return (
-    <TextInput
+    <input
       placeholder="Add a chapter, subtitle, etc."
-      styles={{
-        wrapper: {
-          ":focus": {
-            border: "none !important",
-            boxShadow: "none !important",
-          },
-        },
-        input: {
-          border: "none",
-          textAlign: "center",
-          fontSize: fontSize,
-          fontFamily: fontFamily,
-          fontWeight: 400,
-          lineHeight: "1.25rem",
-          letterSpacing: "2px",
-          textTransform: "uppercase",
-          color: "inherit",
-          width: "600px",
-          wordBreak: "break-word",
-          ":focus": {
-            border: "none !important",
-            boxShadow: "none !important",
-          },
-          backgroundColor: isDarkMode && "#141414 !important",
-        },
-      }}
+      className={classNames(
+        "w-[600px] border-none text-center uppercase leading-5 tracking-[2px] outline-none focus:border-none",
+        `font-[${fontFamily}]`,
+        `text-[${fontSize}]`,
+        isDarkMode && "bg-onyx-800"
+      )}
       {...form.getInputProps("subtitle")}
       onChange={(e) => {
         form.getInputProps("subtitle").onChange(e);
@@ -185,7 +163,7 @@ const Title: React.FC<TitleProps> = ({
   const mutateDocumentTitle = trpc.document.updateTitle.useMutation();
 
   return (
-    <Textarea
+    <textarea
       ref={titleRef}
       placeholder="Add a title"
       {...form.getInputProps("title")}
@@ -196,25 +174,12 @@ const Title: React.FC<TitleProps> = ({
           title: e.target.value,
         });
       }}
-      styles={{
-        input: {
-          border: "none",
-          textAlign: "center",
-          fontSize: fontSize,
-          fontFamily: fontFamily,
-          fontWeight: 600,
-          letterSpacing: "2px",
-          textTransform: "uppercase",
-          color: "inherit",
-          width: "600px",
-          wordBreak: "break-word",
-          ":focus": {
-            border: "none !important",
-            boxShadow: "none !important",
-          },
-          backgroundColor: isDarkMode && "#141414 !important",
-        },
-      }}
+      className={classNames(
+        "min-h-9 block h-auto w-[600px] resize-none border-none px-3 text-center text-3xl font-semibold uppercase leading-[1.55] tracking-[2px] focus:ring-0",
+        `font-[${fontFamily}]`,
+        `text-[${fontSize}]`,
+        isDarkMode && "bg-onyx-800"
+      )}
     />
   );
 };

@@ -20,6 +20,8 @@ model Book {
   locked       Boolean   @default(false)
   folders      Folder[]
   createdDate  DateTime  @default(now())
+  seeded       Boolean   @default(false)
+  authoredBy   String?
   modifiedDate DateTime?
   User         User?     @relation(fields: [userId], references: [id])
   userId       String?

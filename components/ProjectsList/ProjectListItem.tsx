@@ -43,7 +43,12 @@ export default function ProjectListItem({
     >
       <Card className="flex min-h-[220px] flex-col justify-between">
         <Group className="flex justify-between">
-          <p>{book.title}</p>
+          <div>
+            <p>{book.title}</p>
+            <p className="opacity px-0 pt-1 text-xs italic">
+              by {book.authoredBy}
+            </p>
+          </div>
 
           <Menu shadow="md" width={200} withArrow>
             <Menu.Target>

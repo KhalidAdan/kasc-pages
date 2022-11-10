@@ -143,13 +143,13 @@ const AddNewProject: React.FC<{
           {books.length == 0 ? (
             <div className="grow">
               <h3 className="my-2 flex-1 text-sm font-semibold">No projects</h3>
-              <p className="mt-1 text-sm">
+              <p className="p-0 text-sm">
                 Get started by creating a new project.
               </p>
             </div>
           ) : (
             <div className="grow">
-              <p className="mt-1 text-sm">Ready to start something new?</p>
+              <p className="p-0 text-sm">Ready to start something new?</p>
             </div>
           )}
         </Group>

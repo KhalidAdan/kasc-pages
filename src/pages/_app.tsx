@@ -63,7 +63,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
       >
         <MantineProvider
           withGlobalStyles
-          theme={{ colorScheme, fontFamily: "Beaufort" }}
+          theme={{ colorScheme, fontFamily: "Lora" }}
         >
           <NotificationsProvider
             autoClose={4000}

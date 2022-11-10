@@ -4,11 +4,13 @@ import { trpc } from "@/utils/trpc";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
+  DocumentArrowUpIcon,
   EllipsisVerticalIcon,
   PencilIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import { Menu, Text, useMantineColorScheme } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
 import { Document } from "@prisma/client";
 import router from "next/router";
 
@@ -29,6 +31,8 @@ export default function DocumentListItem({
       refetch();
     },
   });
+
+  const publishDocument = trpc.document.publishDocument.useMutation();
 
   const { attributes, listeners, setNodeRef, transform, setActivatorNodeRef } =
     useSortable({ id: doc.id });
@@ -96,6 +100,26 @@ export default function DocumentListItem({
               onClick={() => router.push(`/docs/${doc.id}`)}
             >
               <p className="text-base">Open</p>
+            </Menu.Item>
+            <Menu.Item
+              icon={
+                <DocumentArrowUpIcon className="h-6 w-6" aria-hidden="true" />
+              }
+              onClick={async () => {
+                let document = doc;
+                if (doc.state == "DRAFT") {
+                  document = await publishDocument.mutateAsync({
+                    id: doc.id,
+                  });
+                }
+                showNotification({
+                  title: `Published ${document.title}`,
+                  message: `Your document has been published to ${document.slug}`,
+                  autoClose: false,
+                });
+              }}
+            >
+              <p className="text-base">Publish</p>
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>

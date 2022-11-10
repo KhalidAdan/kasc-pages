@@ -24,6 +24,7 @@ import { showNotification } from "@mantine/notifications";
 import { Document } from "@prisma/client";
 import FontContext, { SupportedFonts } from "contexts/FontContext";
 import React from "react";
+import ChisalaButtonWithIcon from "../ChisalaButtonWithIcon";
 
 const EditorSidebar: React.FC<{
   document: Document;
@@ -43,60 +44,56 @@ const EditorSidebar: React.FC<{
   const [pomoModalOpened, setPomoModalOpened] = React.useState(false);
   return (
     <div className="fixed top-96 flex flex-col gap-4">
-      <Button
+      <ChisalaButtonWithIcon
         onClick={() => setOpened(true)}
-        variant="subtle"
-        color={dark ? "yellow" : "blue"}
-      >
-        <AdjustmentsVerticalIcon className="h-6 w-6" />
-      </Button>
+        isDarkMode={dark}
+        icon={<AdjustmentsVerticalIcon className="h-6 w-6" />}
+      />
 
-      <Button
+      <ChisalaButtonWithIcon
         onClick={() => setPomoModalOpened(true)}
-        variant="subtle"
-        color={dark ? "yellow" : "blue"}
-      >
-        <ClockIcon className="h-6 w-6" />
-      </Button>
+        isDarkMode={dark}
+        icon={<ClockIcon className="h-6 w-6" />}
+      />
 
-      <Button
+      <ChisalaButtonWithIcon
         onClick={() => toggleFullscreen()}
-        variant="subtle"
-        color={dark ? "yellow" : "blue"}
-      >
-        {!fullscreen ? (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="icon icon-tabler icon-tabler-maximize"
-            width="24"
-            height="24"
-            strokeWidth="2"
-            stroke="currentColor"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M0 0h24v24H0z" stroke="none" />
-            <path d="M4 8V6a2 2 0 0 1 2-2h2M4 16v2a2 2 0 0 0 2 2h2M16 4h2a2 2 0 0 1 2 2v2M16 20h2a2 2 0 0 0 2-2v-2" />
-          </svg>
-        ) : (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            strokeWidth="2"
-            stroke="currentColor"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M0 0h24v24H0z" stroke="none" />
-            <path d="M15 19v-2a2 2 0 0 1 2-2h2M15 5v2a2 2 0 0 0 2 2h2M5 15h2a2 2 0 0 1 2 2v2M5 9h2a2 2 0 0 0 2-2V5" />
-          </svg>
-        )}
-      </Button>
+        isDarkMode={dark}
+        icon={
+          !fullscreen ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="icon icon-tabler icon-tabler-maximize"
+              width="24"
+              height="24"
+              strokeWidth="2"
+              stroke="currentColor"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M0 0h24v24H0z" stroke="none" />
+              <path d="M4 8V6a2 2 0 0 1 2-2h2M4 16v2a2 2 0 0 0 2 2h2M16 4h2a2 2 0 0 1 2 2v2M16 20h2a2 2 0 0 0 2-2v-2" />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              strokeWidth="2"
+              stroke="currentColor"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M0 0h24v24H0z" stroke="none" />
+              <path d="M15 19v-2a2 2 0 0 1 2-2h2M15 5v2a2 2 0 0 0 2 2h2M5 15h2a2 2 0 0 1 2 2v2M5 9h2a2 2 0 0 0 2-2V5" />
+            </svg>
+          )
+        }
+      />
 
-      <Button
+      <ChisalaButtonWithIcon
         onClick={async () => {
           await toggleDocumentLock.mutateAsync({
             id: document.id,
@@ -109,15 +106,15 @@ const EditorSidebar: React.FC<{
           setDocumentLocked(!documentLocked);
           refetch();
         }}
-        variant="subtle"
-        color={dark ? "yellow" : "blue"}
-      >
-        {documentLocked ? (
-          <LockClosedIcon className="h-6 w-6" />
-        ) : (
-          <LockOpenIcon className="h-6 w-6" />
-        )}
-      </Button>
+        icon={
+          documentLocked ? (
+            <LockClosedIcon className="h-6 w-6" />
+          ) : (
+            <LockOpenIcon className="h-6 w-6" />
+          )
+        }
+        isDarkMode={dark}
+      />
 
       <SettingsModal opened={opened} setOpened={setOpened} />
       <PomodoroModal

@@ -59,6 +59,8 @@ export const bookRouter = router({
         title: "The Hound of the Baskervilles",
         image: "https://www.gutenberg.org/files/2852/2852-h/images/cover.jpg",
         userId: ctx.session.user.id,
+        authoredBy: "Dashiell Hammett",
+        seeded: true,
         folders: {
           create: [
             {

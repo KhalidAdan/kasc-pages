@@ -1,4 +1,5 @@
 import { Document } from "@prisma/client";
+import { nanoid } from "nanoid";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
@@ -6,6 +7,7 @@ const Document = z.object({
   id: z.string().optional(),
   title: z.string().optional(),
   subtitle: z.string().optional(),
+  slug: z.string().optional(),
   state: z.enum(["DRAFT", "PUBLISHED"]).default("DRAFT"),
   htmlContent: z.string(),
   locked: z.boolean().default(false),
@@ -34,6 +36,16 @@ export const documentRouter = router({
       return await ctx.prisma.document.findUnique({
         where: {
           id: input.id,
+        },
+      });
+    }),
+
+  getDocumentBySlug: publicProcedure
+    .input(Document.pick({ slug: true }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.document.findUnique({
+        where: {
+          slug: input.slug,
         },
       });
     }),
@@ -142,7 +154,6 @@ export const documentRouter = router({
   toggleDocumentLock: protectedProcedure
     .input(Document.pick({ id: true, locked: true }))
     .mutation(async ({ ctx, input }) => {
-      console.log(input.id);
       return await ctx.prisma.document.update({
         data: {
           locked: input.locked,
@@ -168,11 +179,13 @@ export const documentRouter = router({
     }),
 
   publishDocument: protectedProcedure
-    .input(Document.pick({ id: true, state: true, modifiedDate: true }))
+    .input(Document.pick({ id: true }))
     .mutation(async ({ ctx, input }) => {
+      const slug = nanoid(10);
       return await ctx.prisma.document.update({
         data: {
-          state: input.state,
+          state: "PUBLISHED",
+          slug: slug,
           modifiedDate: new Date(),
         },
         where: {

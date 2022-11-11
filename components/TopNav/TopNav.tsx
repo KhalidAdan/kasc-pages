@@ -35,9 +35,11 @@ export const TopNav: React.FC<TopNavProps> = ({
   const showCounts = wordCount && wordCount > 0;
 
   return (
-    <div
+    <nav
       ref={ref}
-      className={`${fixed && "fixed"} z-10 flex w-full justify-between px-8 `}
+      className={`${
+        fixed ? "fixed " : ""
+      }z-10 flex w-full justify-between px-8 `}
     >
       <div
         className={`flex items-end gap-8 pb-8 pt-8 transition-opacity delay-150 ${
@@ -99,6 +101,6 @@ export const TopNav: React.FC<TopNavProps> = ({
           />
         )}
       </div>
-    </div>
+    </nav>
   );
 };

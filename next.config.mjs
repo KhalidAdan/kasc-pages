@@ -20,4 +20,14 @@ export default defineNextConfig({
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        port: "80",
+        pathname: "/**",
+      },
+    ],
+  },
 });

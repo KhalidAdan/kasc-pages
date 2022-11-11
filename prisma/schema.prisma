@@ -32,6 +32,7 @@ model Document {
   title             String?
   subtitle          String?
   state             DocumentState @default(DRAFT)
+  slug              String?       @unique @db.VarChar(10)
   htmlContent       String        @default("<p><br></p>") @db.LongText
   displayOrder      Int
   locked            Boolean       @default(false)

@@ -5,27 +5,27 @@ import { useMantineColorScheme } from "@mantine/core";
 
 const includedFeatures = [
   "Publish private links for sharing and reviewing",
+  "Proofread your work with our 'proofing' mode and add notes to address later",
   "Export work as HTML, PDF, or Word",
-  "Reduced Pricing for Students",
   "Schedule and Publish writing snippets to instagram and twitter",
   "Focused writing mode based on the pomodoro method",
-  "Supporting a small software design shop!",
+  "Supporting a small independant design shop!",
 ];
 
-export default function Example() {
+export default function Pricing() {
   const { colorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
 
   return (
     <div
-      className={classNames(dark ? "h-screen  dark:bg-onyx-900" : "h-screen ")}
+      className={classNames(dark ? "h-screen dark:bg-onyx-900" : "h-screen")}
     >
       <TopNav />
       <div className="mt-8"></div>
       <div className="pt-12 sm:pt-16 lg:pt-0">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-3xl font-bold tracking-tight  sm:text-4xl lg:text-5xl">
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
               Simple no-tricks pricing
             </h1>
             <p className="mt-4 text-xl ">
@@ -40,7 +40,7 @@ export default function Example() {
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-lg overflow-hidden lg:flex lg:max-w-none">
               <div className="flex-1  px-6 py-8 lg:p-12">
-                <h2 className="mt-6 text-base ">
+                <h2 className="mt-6 text-base">
                   Get a focused writing app that helps you write and share your
                   work.
                 </h2>

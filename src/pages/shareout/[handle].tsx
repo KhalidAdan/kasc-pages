@@ -1,4 +1,5 @@
 import TopNav from "@/components/TopNav";
+import useHighlighterService from "@/hooks/useHiglighterService";
 import { classNames } from "@/utils/classNames";
 import { trpc } from "@/utils/trpc";
 import { useMantineColorScheme } from "@mantine/core";
@@ -24,7 +25,12 @@ export default function ShareOut() {
   if (isLoading)
     return <div className="grid place-items-center">Loading...</div>;
 
-  if (error) return <div>An error occured</div>;
+  if (error)
+    return (
+      <div className="grid place-items-center">
+        An error occured: {error.message}
+      </div>
+    );
 
   if (!document)
     return (
@@ -44,6 +50,8 @@ export default function ShareOut() {
 function ShareOutContents({ document }: ShareOutProps) {
   const { colorScheme } = useMantineColorScheme();
   const dark = colorScheme === "dark";
+
+  useHighlighterService();
 
   return (
     <main className="mb-40 overflow-hidden py-16">
@@ -73,12 +81,13 @@ function ShareOutContents({ document }: ShareOutProps) {
       </header>
       <div className="px-4 sm:px-6 lg:px-8">
         <article
+          id="shareout"
           className={classNames(
             "prose prose-lg mx-auto mt-6",
 
             dark
               ? "text-white/75 prose-h2:text-white/75 prose-a:text-white/75 prose-blockquote:text-white/75 prose-strong:text-white/75 prose-em:text-white/75"
-              : "prose-blockquote::text-onyx-700 text-onyx-700 prose-h2:text-onyx-700 prose-a:text-onyx-700 prose-strong:text-onyx-700 prose-em:text-onyx-700"
+              : "text-onyx-700 prose-h2:text-onyx-700 prose-a:text-onyx-700 prose-blockquote:text-onyx-700 prose-strong:text-onyx-700 prose-em:text-onyx-700"
           )}
           dangerouslySetInnerHTML={{ __html: document.htmlContent }}
         ></article>

@@ -2,9 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
+@layer components {
   #__next {
     @apply h-full;
+  }
+
+  mark {
+    @apply hover:bg-old-lavender bg-old-lavender/75 hover:cursor-pointer;
   }
 }
 

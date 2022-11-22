@@ -39,15 +39,15 @@ const createMark = (): HTMLElement => {
   mark.onclick = (e) => {
     e.stopImmediatePropagation(); // stop propagation to prevent the event from bubbling up to the window and fucking up the selection on double click
 
-    const newRange = document.createRange();
-    newRange.selectNode(mark);
-    const content = newRange.extractContents();
+    // const newRange = document.createRange();
+    // newRange.selectNode(mark);
+    // const content = newRange.extractContents();
 
-    const span = document.createElement("span");
-    if (content.textContent) {
-      const text = document.createTextNode(content.textContent);
-      newRange.insertNode(span.appendChild(text));
-    }
+    // const span = document.createElement("span");
+    // if (content.textContent) {
+    //   const text = document.createTextNode(content.textContent);
+    //   newRange.insertNode(span.appendChild(text));
+    // }
   };
   return mark;
 };

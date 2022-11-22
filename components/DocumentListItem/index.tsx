@@ -10,7 +10,7 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import { Menu, Text, useMantineColorScheme } from "@mantine/core";
-import { showNotification } from "@mantine/notifications";
+import { showNotification, updateNotification } from "@mantine/notifications";
 import { Document } from "@prisma/client";
 import router from "next/router";
 
@@ -107,14 +107,33 @@ export default function DocumentListItem({
               }
               onClick={async () => {
                 let document = doc;
-                if (doc.state == "DRAFT") {
-                  document = await publishDocument.mutateAsync({
-                    id: doc.id,
-                  });
-                }
+
                 showNotification({
-                  title: `Published ${document.title}`,
-                  message: `Your document has been published to ${document.slug}`,
+                  id: "publish",
+                  title: `Publishing...`,
+                  message: "Your document is being published...",
+                  loading: true,
+                  autoClose: false,
+                });
+                document = await publishDocument.mutateAsync({
+                  id: doc.id,
+                });
+                updateNotification({
+                  id: "publish",
+                  title: `🎉 Published! 🎉`,
+                  message: (
+                    <p className="">
+                      Your document has been published{" "}
+                      <a
+                        className="text-carolina-blue-700"
+                        href={`/shareout/${document.slug}`}
+                      >
+                        here!
+                      </a>{" "}
+                      Check it out!
+                    </p>
+                  ),
+                  loading: false,
                   autoClose: false,
                 });
               }}

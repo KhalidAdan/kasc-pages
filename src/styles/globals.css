@@ -7,7 +7,7 @@
     @apply h-full;
   }
 
-  mark {
+  mark, mark p {
     @apply hover:bg-old-lavender bg-old-lavender/75 hover:cursor-pointer;
   }
 }

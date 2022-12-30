@@ -24,7 +24,7 @@ export default function ShareOut() {
   if (isLoading)
     return <div className="grid place-items-center">Loading...</div>;
 
-  if (error) return <div>An error occured</div>;
+  if (error) return <div>An error occured {error.message}</div>;
 
   if (!document)
     return (

@@ -116,8 +116,13 @@ export default function DocumentListItem({
                   title: `Published ${document.title}`,
                   message: (
                     <p>
-                      Your document has been published to
-                      <a href={`/shareout/${document.slug}`}>this shareout</a>
+                      Your document has been published to{" "}
+                      <a
+                        href={`/shareout/${document.slug}`}
+                        className="decoration-carolina-500 text-carolina-blue-800 underline decoration-2 underline-offset-2 hover:decoration-mint-cream"
+                      >
+                        this shareout file
+                      </a>
                     </p>
                   ),
                   autoClose: false,

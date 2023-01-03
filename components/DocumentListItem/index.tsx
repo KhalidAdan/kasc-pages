@@ -114,7 +114,12 @@ export default function DocumentListItem({
                 }
                 showNotification({
                   title: `Published ${document.title}`,
-                  message: `Your document has been published to ${document.slug}`,
+                  message: (
+                    <p>
+                      Your document has been published to
+                      <a href={`/shareout/${document.slug}`}>this shareout</a>
+                    </p>
+                  ),
                   autoClose: false,
                 });
               }}

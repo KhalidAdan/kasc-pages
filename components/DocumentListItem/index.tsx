@@ -119,7 +119,7 @@ export default function DocumentListItem({
                       Your document has been published to{" "}
                       <a
                         href={`/shareout/${document.slug}`}
-                        className="decoration-carolina-500 text-carolina-blue-800 underline decoration-2 underline-offset-2 hover:decoration-mint-cream"
+                        className="decoration-carolina-500 text-carolina-blue-800 underline decoration-2 underline-offset-2 hover:text-mint-cream hover:decoration-mint-cream"
                       >
                         this shareout file
                       </a>

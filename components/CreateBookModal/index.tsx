@@ -10,6 +10,7 @@ export default function CreateBookModal({
   setModalOpened: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [title, setTitle] = React.useState<string>("");
+  const [author, setAuthor] = React.useState<string>("");
 
   const createBook = trpc.book.create.useMutation();
   <>
@@ -25,6 +26,12 @@ export default function CreateBookModal({
         name="title"
         onChange={(e) => setTitle(e.target.value)}
         value={title}
+      />
+      <TextInput
+        name="Authroed by"
+        placeholder="Feel free to use a pen name here"
+        onChange={(e) => setAuthor(e.target.value)}
+        value={author}
       />
       <Button onClick={() => createBook.mutate({ title })}>
         Start scribbling

@@ -21,6 +21,7 @@ const ProjectsList = () => {
 
   const [modalOpened, setModalOpened] = React.useState<boolean>(false);
   const [title, setTitle] = React.useState<string>("");
+  const [authoredBy, setAuthoredBy] = React.useState<string>("");
 
   const {
     data: books,
@@ -89,9 +90,26 @@ const ProjectsList = () => {
         >
           <TextInput
             name="title"
+            label="Title"
             onChange={(e) => setTitle(e.target.value)}
             value={title}
             placeholder="Enter the project title"
+            className="mb-4"
+            styles={{
+              input: {
+                backgroundColor: dark ? "#1A1B1E !important" : undefined,
+                borderColor: "gray",
+                borderRadius: "6px !important",
+                fontFamily: "Lora",
+              },
+            }}
+          />
+          <TextInput
+            name="Authored by"
+            label="Authored by"
+            onChange={(e) => setAuthoredBy(e.target.value)}
+            value={authoredBy}
+            placeholder="Feel free to use a pen name here"
             className="mb-4"
             styles={{
               input: {
@@ -107,7 +125,7 @@ const ProjectsList = () => {
             component="a"
             className="w-full"
             onClick={() => {
-              createBook.mutate({ title });
+              createBook.mutate({ title, authoredBy });
               refetch();
             }}
           >

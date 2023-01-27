@@ -175,7 +175,7 @@ const Title: React.FC<TitleProps> = ({
         });
       }}
       className={classNames(
-        "min-h-9 block h-auto w-[600px] resize-none border-none px-3 text-center text-3xl font-semibold uppercase leading-[1.55] tracking-[2px] focus:ring-0",
+        "min-h-9 z-40 block h-auto w-[600px] resize-none border-none px-3 text-center text-3xl font-semibold uppercase leading-[1.55] tracking-[2px] focus:ring-0",
         `font-[${fontFamily}]`,
         `text-[${fontSize}]`,
         isDarkMode && "bg-onyx-800"

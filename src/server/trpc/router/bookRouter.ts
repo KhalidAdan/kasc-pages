@@ -4,6 +4,7 @@ import { protectedProcedure, router } from "../trpc";
 export const Book = z.object({
   id: z.string(),
   title: z.string(),
+  authoredBy: z.string(),
   image: z.string().optional(),
   folders: z.array(z.any()),
   createdDate: z.date(),
@@ -14,11 +15,12 @@ export type BookType = z.infer<typeof Book>;
 
 export const bookRouter = router({
   create: protectedProcedure
-    .input(Book.pick({ title: true }))
+    .input(Book.pick({ title: true, authoredBy: true }))
     .mutation(async ({ ctx, input }) => {
       return await ctx.prisma.book.create({
         data: {
           title: input.title,
+          authoredBy: input.authoredBy,
           createdDate: new Date(),
           folders: {
             create: [
